@@ -2,21 +2,22 @@ common-tools
 ============
 
 一、数据库工具类
+  
   1、com.baijob.commonTools.db.ds
 		
-		C3p0Ds 和 DruidDs分别是两种连接池的实现，依赖于数据库配置文件，配置文件的样例参考config/db-example.setting
-		使用时将db-example.setting复制于${classpath}/config/db.setting，按照配置文件中的说明替换相应值
-		如果使用Druid，则需参考druid-example.setting创建${classpath}/config/druid.setting文件，详情请参考官方文档
-		使用C3P0则需要参考c3p0-config-example.xml创建${classpath}/c3p0-config.xml来调节C3P0参数
-		此时即可调用C3p0Ds.getDataSource()或DruidDs.getDataSource()方法获得默认的数据源
+	C3p0Ds 和 DruidDs分别是两种连接池的实现，依赖于数据库配置文件，配置文件的样例参考config/db-example.setting
+	使用时将db-example.setting复制于${classpath}/config/db.setting，按照配置文件中的说明替换相应值
+	如果使用Druid，则需参考druid-example.setting创建${classpath}/config/druid.setting文件，详情请参考官方文档
+	使用C3P0则需要参考c3p0-config-example.xml创建${classpath}/c3p0-config.xml来调节C3P0参数
+	此时即可调用C3p0Ds.getDataSource()或DruidDs.getDataSource()方法获得默认的数据源
 		
-		如果要自定义数据库配置文件的参数，请调用相应的init()，传入相关参数
-		注：Setting对象请参考与之对应的章节
+	如果要自定义数据库配置文件的参数，请调用相应的init()，传入相关参数
+	注：Setting对象请参考与之对应的章节
 		
-	2、com.baijob.commonTools.db.DbUtil
+  2、com.baijob.commonTools.db.DbUtil
 		
-		数据库工具类，提供了关闭方法：关闭可以传入多个参数，关闭的顺序是按照参数的顺序来的，用于一次性关闭Connnection、Statement、ResultSet等
-		newSqlRunner方法用于快速新建一个SqlRunner（此类介绍参考下问）
+	数据库工具类，提供了关闭方法：关闭可以传入多个参数，关闭的顺序是按照参数的顺序来的，用于一次性关闭Connnection、Statement、ResultSet等
+	newSqlRunner方法用于快速新建一个SqlRunner（此类介绍参考下问）
 		
 	3、com.baijob.commonTools.db.DsSetting，用于读取db.setting文件辅助类，内部使用
 	
