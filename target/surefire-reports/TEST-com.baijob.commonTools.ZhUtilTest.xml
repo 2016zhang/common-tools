@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.366" errors="0" skipped="0" tests="1" name="com.baijob.commonTools.ZhUtilTest">
+<testsuite failures="0" time="0.355" errors="0" skipped="0" tests="1" name="com.baijob.commonTools.ZhUtilTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="D:\Java\jdk1.6.0_37\jre\bin"/>
@@ -14,7 +14,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="Service Pack 1"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="E:\workspace\java\commonTools"/>
+    <property name="user.dir" value="E:\git_repo\common-tools"/>
     <property name="java.runtime.version" value="1.6.0_37-b06"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="D:\Java\jdk1.6.0_37\jre\lib\endorsed"/>
@@ -42,7 +42,7 @@
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="sun.arch.data.model" value="32"/>
     <property name="java.home" value="D:\Java\jdk1.6.0_37\jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean source:jar install"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean source:jar package"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.language" value="zh"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -59,5 +59,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86"/>
   </properties>
-  <testcase time="0.272" classname="com.baijob.commonTools.ZhUtilTest" name="zhUtilTest"/>
+  <testcase time="0.271" classname="com.baijob.commonTools.ZhUtilTest" name="zhUtilTest"/>
 </testsuite>

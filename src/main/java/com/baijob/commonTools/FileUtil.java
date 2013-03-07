@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.Collection;
 
 /**
@@ -44,25 +45,33 @@ public class FileUtil {
 	}
 	
 	/**
-	 * 获取绝对路径
+	 * 获取绝对路径<br/>
+	 * 此方法不会判定给定路径是否有效（文件或目录存在）
 	 * @param path 相对路径
 	 * @param baseClass 相对路径所相对的类
 	 * @return 绝对路径
 	 */
 	public static String getAbsolutePath(String path, Class<?> baseClass){
 		if(path == null) return null;
-		if(baseClass == null) return FileUtil.class.getClassLoader().getResource(path).getPath();
+		if(baseClass == null) {
+			ClassLoader classLoader = FileUtil.class.getClassLoader();
+			URL url = classLoader.getResource(path);
+			if(url != null) {
+				return classLoader.getResource(path).getPath();
+			}else {
+				return classLoader.getResource("") + path;
+			}
+		}
 		return baseClass.getResource(path).getPath();
 	}
 	
 	/**
 	 * 获取绝对路径，相对于classes的根目录
-	 * @param path 相对路径
-	 * @param relativePathBaseClass 相对路径所相对的类
+	 * @param pathBaseClassLoader 相对路径
 	 * @return 绝对路径
 	 */
-	public static String getAbsolutePath(String path){
-		return FileUtil.class.getClassLoader().getResource(path).getPath();
+	public static String getAbsolutePath(String pathBaseClassLoader){
+		return getAbsolutePath(pathBaseClassLoader, null);
 	}
 
 	/**
@@ -167,5 +176,31 @@ public class FileUtil {
 		}
 		close(reader);
 		return collection;
+	}
+	
+	/**
+	 * 按照给定的readerHandler读取文件中的数据
+	 * @param readerHandler Reader处理类
+	 * @param path 文件的绝对路径
+	 * @param charset 字符集
+	 * @return
+	 * @throws IOException
+	 */
+	public static <T> T loadDataFromfile(ReaderHandler<T> readerHandler, String path, String charset) throws IOException {
+		BufferedReader reader = null;
+		T result = null;
+		try {
+			reader = getReader(path, charset);
+			result = readerHandler.handle(reader);
+		} catch (IOException e) {
+			throw new IOException(e);
+		}finally {
+			FileUtil.close(reader);
+		}
+		return result;
+	}
+	
+	public interface ReaderHandler<T> {
+		public T handle(BufferedReader reader);
 	}
 }

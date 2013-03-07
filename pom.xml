@@ -3,7 +3,7 @@
 	<groupId>com.baijob</groupId>
 	<artifactId>commonTools</artifactId>
 	<packaging>jar</packaging>
-	<version>1.3</version>
+	<version>1.3.1</version>
 	<name>commonTools</name>
 	<url>http://www.baijob.com</url>
 
