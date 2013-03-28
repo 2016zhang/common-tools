@@ -107,5 +107,11 @@
 			<version>1.4.5</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.jodd</groupId>
+			<artifactId>jodd-http</artifactId>
+			<version>3.4.2</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>

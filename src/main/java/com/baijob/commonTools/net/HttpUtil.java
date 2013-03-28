@@ -121,17 +121,46 @@ public class HttpUtil {
 	}
 	
 	/**
-	 * 从Http连接的头信息中获得字符集
-	 * @param conn
-	 * @return
+	 * 格式化Http Header 的name部分
+	 * @param headerName
+	 * @return 格式化后的 header name, 如果headerName为空，返回null
 	 */
-	private static String getCharsetFromConn(HttpURLConnection conn){
-		String charset = conn.getContentEncoding();
-		if(charset == null || "".equals(charset.trim())){
-			String contentType = conn.getContentType();
-			charset = RegexUtil.get("charset=(.*)", contentType, 1);
+	public static String formatHeaderName(String headerName) {
+		if(LangUtil.isEmpty(headerName)) {
+			return null;
+		}else {
+			headerName = headerName.toLowerCase();
 		}
-		return charset;
+		
+		if (headerName.equals("etag")) {
+			return "ETag";
+		}
+
+		if (headerName.equals("www-authenticate")) {
+			return "WWW-Authenticate";
+		}
+
+		char[] name = headerName.toCharArray();
+
+		boolean capitalize = true;
+
+		for (int i = 0; i < name.length; i++) {
+			char c = name[i];
+
+			if (c == '-') {
+				capitalize = true;
+				continue;
+			}
+
+			if (capitalize) {
+				name[i] = Character.toUpperCase(c);
+				capitalize = false;
+			} else {
+				name[i] = Character.toLowerCase(c);
+			}
+		}
+
+		return new String(name);
 	}
 	
 	/**
@@ -158,6 +187,20 @@ public class HttpUtil {
 			ip = ip.trim().split(",")[0];
 		}
 		return ip;
+	}
+	
+	/**
+	 * 从Http连接的头信息中获得字符集
+	 * @param conn
+	 * @return
+	 */
+	private static String getCharsetFromConn(HttpURLConnection conn){
+		String charset = conn.getContentEncoding();
+		if(charset == null || "".equals(charset.trim())){
+			String contentType = conn.getContentType();
+			charset = RegexUtil.get("charset=(.*)", contentType, 1);
+		}
+		return charset;
 	}
 	
 	/**

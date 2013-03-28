@@ -4,12 +4,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 时间工具类
  * @author 刘世权 路小磊
  */
 public class DateUtil {
+	private static Logger logger = LoggerFactory.getLogger(DateUtil.class);
 	
 	/** 毫秒 */
 	public final static long MS = 1;
@@ -22,6 +27,30 @@ public class DateUtil {
 	/** 每天的毫秒数 */
 	public final static long DAY_MS = HOUR_MS * 24;
 	
+	/** 标准日期（不含时间）格式化器 */
+	private final static SimpleDateFormat NORM_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	/** 标准日期时间格式化器 */
+	private final static SimpleDateFormat NORM_DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	/** HTTP日期时间格式化器 */
+	private final static SimpleDateFormat HTTP_DATETIME_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+	
+	/**
+	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
+	 * @return
+	 */
+	public static String now() {
+		return formatDateTime(new Date());
+	}
+	
+	/**
+	 * 当前日期，格式 yyyy-MM-dd
+	 * @return
+	 */
+	public static String today() {
+		return formatDate(new Date());
+	}
+	
+	// ------------------------------------ Format start ----------------------------------------------
 	/**
 	 * 根据特定格式格式化日期
 	 * @param date 被格式化的日期
@@ -33,6 +62,38 @@ public class DateUtil {
 	}
 	
 	/**
+	 * 格式 yyyy-MM-dd HH:mm:ss
+	 * @param d
+	 * @return
+	 */
+	public static String formatDateTime(Date d) {
+//		return format(d, "yyyy-MM-dd HH:mm:ss");
+		return NORM_DATETIME_FORMAT.format(d);
+	}
+	
+	/**
+	 * 格式化为Http的标准日期格式
+	 * @param date 日期
+	 * @return
+	 */
+	public static String formatHttpDate(Date date) {
+//		return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).format(date);
+		return HTTP_DATETIME_FORMAT.format(date);
+	}
+	
+	/**
+	 * 格式 yyyy-MM-dd
+	 * @param d
+	 * @return
+	 */
+	public static String formatDate(Date d) {
+//		return format(d, "yyyy-MM-dd");
+		return NORM_DATE_FORMAT.format(d);
+	}
+	// ------------------------------------ Format end ----------------------------------------------
+	
+	// ------------------------------------ Parse start ----------------------------------------------
+	/**
 	 * 将特定格式的日期转换为Date对象
 	 * @param dateString 特定格式的日期
 	 * @param format 格式
@@ -42,43 +103,9 @@ public class DateUtil {
 		try {
 			return (new SimpleDateFormat(format)).parse(dateString);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("Parse " + dateString + " with format " + format + " error!", e);
 		}
 		return null;
-	}
-	
-	/**
-	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
-	 * @return
-	 */
-	public static String now() {
-		return format(new Date(), "yyyy-MM-dd HH:mm:ss");
-	}
-	
-	/**
-	 * 当前日期，格式 yyyy-MM-dd
-	 * @return
-	 */
-	public static String today() {
-		return format(new Date(), "yyyy-MM-dd");
-	}
-	
-	/**
-	 * 格式 yyyy-MM-dd HH:mm:ss
-	 * @param d
-	 * @return
-	 */
-	public static String formatDateTime(Date d) {
-		return format(d, "yyyy-MM-dd HH:mm:ss");
-	}
-	
-	/**
-	 * 格式 yyyy-MM-dd
-	 * @param d
-	 * @return
-	 */
-	public static String formatDate(Date d) {
-		return format(d, "yyyy-MM-dd");
 	}
 	
 	/**
@@ -87,7 +114,13 @@ public class DateUtil {
 	 * @return
 	 */
 	public static Date parseDateTime(String s){
-		return parse(s, "yyyy-MM-dd HH:mm:ss");
+//		return parse(s, "yyyy-MM-dd HH:mm:ss");
+		try {
+			return NORM_DATETIME_FORMAT.parse(s);
+		} catch (ParseException e) {
+			logger.error("Parse " + s + " with format " + NORM_DATETIME_FORMAT.toPattern() + " error!", e);
+		}
+		return null;
 	}
 	
 	/**
@@ -96,20 +129,27 @@ public class DateUtil {
 	 * @return
 	 */
 	public static Date parseDate(String s){
-		return parse(s, "yyyy-MM-dd");
+//		return parse(s, "yyyy-MM-dd");
+		try {
+			return NORM_DATE_FORMAT.parse(s);
+		} catch (ParseException e) {
+			logger.error("Parse " + s + " with format " + NORM_DATE_FORMAT.toPattern() + " error!", e);
+		}
+		return null;
 	}
+	// ------------------------------------ Parse end ----------------------------------------------
 	
 	/**
 	 * 获取指定日期偏移指定时间后的时间
 	 * @param date 基准日期
-	 * @param field 偏移的粒度大小（小时、天、月等）使用Calender中的常数
+	 * @param calendarField 偏移的粒度大小（小时、天、月等）使用Calendar中的常数
 	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
 	 * @return
 	 */
-	public static Date getOffsiteDate(Date date, int field, int offsite){
+	public static Date getOffsiteDate(Date date, int calendarField, int offsite){
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.add(field, offsite);
+		cal.add(calendarField, offsite);
 		return cal.getTime();
 	}
 	

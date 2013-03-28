@@ -1,11 +1,12 @@
 package com.baijob.commonTools;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class LangUtil {
-
+	
 	/**
 	 * 字符串是否为空 空的定义如下： <br/>
 	 * 1、为null <br/>
@@ -184,6 +185,39 @@ public class LangUtil {
 		}
 		list.add(sb.toString());
 		return list;
+	}
+	
+	/**
+	 * 重复某个字符
+	 * @param c 被重复的字符
+	 * @param count 重复的数目
+	 * @return 重复字符字符串
+	 */
+	public static String repeat(char c, int count) {
+		char[] result = new char[count];
+		for (int i = 0; i < count; i++) {
+			result[i] = c;
+		}
+		return new String(result);
+	}
+	
+	/**
+	 * 给定字符串转换字符编码<br/>
+	 * 如果参数为空，则返回原字符串，不报错。
+	 * @param str 被转码的字符串
+	 * @param sourceCharset 原字符集
+	 * @param destCharset 目标字符集
+	 * @return
+	 */
+	public static String transCharset(String str, String sourceCharset, String destCharset) {
+		if(LangUtil.isEmpty(str) || LangUtil.isEmpty(sourceCharset) || LangUtil.isEmpty(destCharset)) {
+			return str;
+		}
+		try {
+			return new String(str.getBytes(sourceCharset), destCharset);
+		} catch (UnsupportedEncodingException e) {
+			return str;
+		}
 	}
 
 	/**

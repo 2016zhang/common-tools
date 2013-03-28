@@ -1,5 +1,6 @@
 package com.baijob.commonTools;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -126,5 +127,47 @@ public class CollectionUtil {
 	 */
 	public static <T> ArrayList<T> newArrayList(){
 		return new ArrayList<T>();
+	}
+	
+	/**
+	 * 将新元素添加到已有数组中<br/>
+	 * 添加新元素会生成一个新的数组，不影响原数组
+	 * @param buffer 已有数组
+	 * @param newElement 新元素
+	 * @return 新数组
+	 */
+	public static <T> T[] append(T[] buffer, T newElement) {
+		T[] t = resize(buffer, buffer.length + 1, newElement.getClass());
+		t[buffer.length] = newElement;
+		return t;
+	}
+	
+	/**
+	 * 生成一个新的重新设置大小的数组
+	 * @param buffer 原数组
+	 * @param newSize 新的数组大小
+	 * @param componentType 数组元素类型
+	 * @return 调整后的新数组
+	 */
+	@SuppressWarnings({"unchecked"})
+	public static <T> T[] resize(T[] buffer, int newSize, Class<?> componentType) {
+		//给定类型为空时，使用原数组的类型
+		if (componentType == null) {
+			componentType =  buffer.getClass().getComponentType();
+		}
+		T[] newArray = (T[]) Array.newInstance(componentType, newSize);
+		System.arraycopy(buffer, 0, newArray, 0, buffer.length >= newSize ? newSize : buffer.length);
+		return newArray;
+	}
+	
+	/**
+	 * 生成一个新的重新设置大小的数组<br/>
+	 * 新数组的类型为原数组的类型
+	 * @param buffer 原数组
+	 * @param newSize 新的数组大小
+	 * @return 调整后的新数组
+	 */
+	public static <T> T[] resize(T[] buffer, int newSize) {
+		return resize(buffer, newSize, null);
 	}
 }

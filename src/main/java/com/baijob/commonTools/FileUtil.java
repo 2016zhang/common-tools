@@ -200,7 +200,32 @@ public class FileUtil {
 		return result;
 	}
 	
+	/**
+	 * 获得文件的扩展名
+	 * @param fileName 文件名
+	 * @return 扩展名
+	 */
+	public static String getExtension(String fileName) {
+		if (fileName == null) {
+			return null;
+		}
+		int index = fileName.lastIndexOf(".");
+		if (index == -1) {
+			return "";
+		} else {
+			String ext = fileName.substring(index + 1);
+			//扩展名中不能包含路径相关的符号
+			return (ext.contains("/") || ext.contains("\\")) ? "" : ext;
+		}
+	}
+	
+	/**
+	 * Reader处理接口
+	 * @author Luxiaolei
+	 *
+	 * @param <T>
+	 */
 	public interface ReaderHandler<T> {
-		public T handle(BufferedReader reader);
+		public T handle(BufferedReader reader) throws IOException;
 	}
 }

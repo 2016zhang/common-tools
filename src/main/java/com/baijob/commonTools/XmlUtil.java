@@ -77,9 +77,11 @@ public class XmlUtil {
 	 * @throws IOException
 	 */
 	public static void xmlWriteToFile(Document doc, String filePath, String charset, boolean isEscapeText) throws IOException {
+		OutputFormat outputFormat = OutputFormat.createPrettyPrint();
+		outputFormat.setEncoding(charset);
 		XMLWriter writer = null;
 		try {
-			writer = new XMLWriter(FileUtil.getBufferedWriter(filePath, charset, false), OutputFormat.createPrettyPrint());
+			writer = new XMLWriter(FileUtil.getBufferedWriter(filePath, charset, false), outputFormat);
 			writer.setEscapeText(isEscapeText);
 			writer.write(doc);
 		} catch (UnsupportedEncodingException e) {
