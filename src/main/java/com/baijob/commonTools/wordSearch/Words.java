@@ -1,5 +1,7 @@
 package com.baijob.commonTools.wordSearch;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.baijob.commonTools.LangUtil;
@@ -11,6 +13,9 @@ import com.baijob.commonTools.LangUtil;
  */
 public class Words extends HashMap<Character, Words>{
 	private static final long serialVersionUID = -4646423269465809276L;
+	
+	/** 默认的类型 */
+	public final static int DEFAULT_TYPE = 0;
 	
 	/** 关键字类型，是否最后一个字符 */
 	public Map<Integer, Boolean> types = new HashMap<Integer, Boolean>();
@@ -24,6 +29,14 @@ public class Words extends HashMap<Character, Words>{
 	 */
 	public Words(int type) {
 		types.put(type, false);
+	}
+	
+	/**
+	 * 添加单词，使用默认类型
+	 * @param word 单词
+	 */
+	public void addWord(String word) {
+		this.addWord(word, DEFAULT_TYPE);
 	}
 	
 	/**
@@ -64,6 +77,15 @@ public class Words extends HashMap<Character, Words>{
 	}
 	
 	/**
+	 * 指定文本是否包含树中的词，默认类型
+	 * @param text 被检查的文本
+	 * @return
+	 */
+	public boolean contains(String text) {
+		return contains(text, DEFAULT_TYPE);
+	}
+	
+	/**
 	 * 指定文本是否包含树中的词
 	 * @param text 被检查的文本
 	 * @param type 类型
@@ -91,6 +113,15 @@ public class Words extends HashMap<Character, Words>{
 	}
 	
 	/**
+	 * 获得第一个匹配的关键字，默认类型
+	 * @param text 被检查的文本
+	 * @return
+	 */
+	public String getFindedFirstWord(String text) {
+		return getFindedFirstWord(text, DEFAULT_TYPE);
+	}
+	
+	/**
 	 * 获得第一个匹配的关键字
 	 * @param text 被检查的文本
 	 * @param type 类型
@@ -114,8 +145,58 @@ public class Words extends HashMap<Character, Words>{
 				
 				if(isEnd) return sb.toString();
 			}
+			//从下一个字符开始查找
 			text = text.substring(1);
 		}
 		return null;
+	}
+	
+	/**
+	 * 找出所有匹配的关键字，默认类型
+	 * @param text 被检查的文本
+	 * @return 匹配的词列表
+	 */
+	public List<String> getFindedAllWords(String text) {
+		return getFindedAllWords(text, DEFAULT_TYPE);
+	}
+	
+	/**
+	 * 找出所有匹配的关键字
+	 * @param text 被检查的文本
+	 * @param type 文本的类型
+	 * @return 匹配的词列表
+	 */
+	public List<String> getFindedAllWords(String text, int type) {
+		List<String> findedWords = new ArrayList<String>();
+		while(! LangUtil.isEmpty(text)){
+			StringBuilder sb = new StringBuilder();
+			Words words = this;
+			char[] array = text.toCharArray();
+			for (char c : array) {
+				//跳过特殊字符
+				if(StopChar.isStopChar(c)) continue;
+				
+				//子节点中子节点、类型为空表示词不存在
+				words = words.get(c);
+				if(words == null) break;
+				sb.append(c);
+				Boolean isEnd = words.types.get(type);
+				if(isEnd == null) break; 
+				
+				//到达单词末尾，关键词成立，从此词的下一个位置开始查找
+				if(isEnd) {
+					findedWords.add(sb.toString());
+					int len = sb.length();
+					sb.delete(0, len);
+					text = text.substring(len);
+					break;
+				}
+			}
+			//从下一个字符开始
+			if(text.length() > 0) {
+				text = text.substring(1);
+			}
+		}
+		return findedWords;
 	}
 }
