@@ -57,9 +57,9 @@ public class FileUtil {
 			ClassLoader classLoader = FileUtil.class.getClassLoader();
 			URL url = classLoader.getResource(path);
 			if(url != null) {
-				return classLoader.getResource(path).getPath();
+				return url.getPath();
 			}else {
-				return classLoader.getResource("") + path;
+				return classLoader.getResource("").getPath() + path;
 			}
 		}
 		return baseClass.getResource(path).getPath();
