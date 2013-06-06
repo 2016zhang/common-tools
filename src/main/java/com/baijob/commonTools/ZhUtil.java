@@ -28,7 +28,9 @@ public class ZhUtil {
 	/** 全角半角转换间隔：ASCII表中除空格外的可见字符与对应的全角字符的相对偏移 */
 	private static final int CONVERT_STEP = 65248;
 
+	/** 简体到繁体的映射表 */
 	private static Setting s2tSetting;
+	/** 繁体到简体的映射表 */
 	private static Setting t2sSetting;
 
 	/**
@@ -57,10 +59,10 @@ public class ZhUtil {
 	}
 
 	/**
-	 * 将文本中的繁体字转换为简体字
-	 * 
-	 * @param text
-	 * @return
+	 * 将文本中的繁体字转换为简体字<br>
+	 * 若文本中无繁体字，返回原文
+	 * @param text 被转换的文本
+	 * @return 转换后的文本
 	 */
 	public static String toSimplified(String text) {
 		StringBuilder sb = new StringBuilder(text.length());
@@ -80,10 +82,10 @@ public class ZhUtil {
 	}
 
 	/**
-	 * 将文本中的简体字转换为繁体字
-	 * 
-	 * @param text
-	 * @return
+	 * 将文本中的简体字转换为繁体字<br>
+	 * 若文本中无简体字，则返回原文
+	 * @param text 被转换的文本
+	 * @return 转换后的文本
 	 */
 	public static String toTraditional(String text) {
 		StringBuilder sb = new StringBuilder(text.length());
@@ -105,6 +107,8 @@ public class ZhUtil {
 	/**
 	 * 全角字符->半角字符转换<br/>
 	 * 只处理全角的空格，全角！到全角～之间的字符，忽略其他
+	 * @param src 原文本
+	 * @return 转换后的文本
 	 */
 	public static String toDBC(String src) {
 		if (src == null)
@@ -127,6 +131,8 @@ public class ZhUtil {
 	/**
 	 * 半角字符->全角字符转换<br/>
 	 * 只处理空格，!到˜之间的字符，忽略其他
+	 * @param src 原文本
+	 * @return 转换后的文本
 	 */
 	public static String toSBC(String src) {
 		if (src == null)

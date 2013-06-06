@@ -20,13 +20,23 @@ public abstract class BaseRunnable implements Runnable {
 	/** 此线程每次运行的时长，key为次数，value为时长 */
 	protected Map<Integer, Long> runTimes = new HashMap<Integer, Long>();
 	
+	//---------------------------------------------------------------------------- 构造 start
+	/**
+	 * 默认构造
+	 */
 	public BaseRunnable() {
 	}
 	
+	/**
+	 * 构造
+	 * @param id ID
+	 * @param name 线程名称
+	 */
 	public BaseRunnable(long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
+	//---------------------------------------------------------------------------- 构造 end
 
 	@Override
 	public void run() {
@@ -87,14 +97,14 @@ public abstract class BaseRunnable implements Runnable {
 	
 	/**
 	 * 线程ID
-	 * @return
+	 * @return ID
 	 */
 	public long getId() {
 		return id;
 	}
 	/**
 	 * 设置线程ID
-	 * @param id
+	 * @param id ID
 	 */
 	public void setId(long id) {
 		this.id = id;
@@ -102,14 +112,14 @@ public abstract class BaseRunnable implements Runnable {
 
 	/**
 	 * 线程名称
-	 * @return
+	 * @return 名称
 	 */
 	public String getName() {
 		return name;
 	}
 	/**
 	 * 设置线程名称
-	 * @param name
+	 * @param name 名称
 	 */
 	public void setName(String name) {
 		this.name = name;

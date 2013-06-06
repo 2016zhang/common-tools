@@ -22,7 +22,7 @@ public class SocketUtil {
 	 * 检测本地端口可用性
 	 * 
 	 * @param port 被检测的端口
-	 * @return
+	 * @return 是否可用
 	 */
 	public static boolean isUsableLocalPort(int port) {
 		if (! isValidPort(port)) {
@@ -41,7 +41,7 @@ public class SocketUtil {
 	/**
 	 * 是否为有效的端口
 	 * @param port 端口号
-	 * @return
+	 * @return 是否有效
 	 */
 	public static boolean isValidPort(int port) {
 		//有效端口是0～65535
@@ -51,8 +51,8 @@ public class SocketUtil {
 	/**
 	 * 根据long值获取ip v4地址
 	 * 
-	 * @param longIP
-	 * @return
+	 * @param longIP IP的long表示形式
+	 * @return IP V4 地址
 	 */
 	public static String longToIpv4(long longIP) {
 		StringBuffer sb = new StringBuffer();
@@ -70,9 +70,8 @@ public class SocketUtil {
 
 	/**
 	 * 根据ip地址计算出long型的数据
-	 * 
-	 * @param ipStr
-	 * @return
+	 * @param ipStr IP V4 地址
+	 * @return long值
 	 */
 	public static long ipv4ToLong(String strIP) {
 		if(RegexUtil.isIpv4(strIP)){

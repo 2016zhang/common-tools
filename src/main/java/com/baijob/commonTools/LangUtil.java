@@ -14,7 +14,7 @@ public class LangUtil {
 	 * 3、""<br/>
 	 * 
 	 * @param str 被检测的字符串
-	 * @return
+	 * @return 是否为空
 	 */
 	public static boolean isEmpty(String str) {
 		return (str == null || str.trim().length() == 0) ? true : false;
@@ -24,7 +24,7 @@ public class LangUtil {
 	 * 获得一个随机的字符串
 	 * 
 	 * @param length 字符串的长度
-	 * @return
+	 * @return 随机字符串
 	 */
 	public static String getRandomString(int length) {
 		Random random = new Random();
@@ -45,7 +45,7 @@ public class LangUtil {
 	 * 强制转换类型
 	 * @param clazz 被转换成的类型
 	 * @param value 需要转换的对象
-	 * @return
+	 * @return 转换后的对象
 	 */
 	public static Object cast(Class<?> clazz, Object value) {
 		try {
@@ -142,7 +142,7 @@ public class LangUtil {
 	 * a##b#c -> [a,"",b,c]
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
-	 * @return
+	 * @return 切分后的集合
 	 */
 	public static List<String> split(String str, char separator) {
 		return split(str, separator, 0);
@@ -153,7 +153,7 @@ public class LangUtil {
 	 * @param str 被切分的字符串
 	 * @param separator 分隔符字符
 	 * @param limit 限制分片数
-	 * @return
+	 * @return 切分后的集合
 	 */
 	public static List<String> split(String str, char separator, int limit){
 		if(str == null) {
@@ -207,7 +207,7 @@ public class LangUtil {
 	 * @param str 被转码的字符串
 	 * @param sourceCharset 原字符集
 	 * @param destCharset 目标字符集
-	 * @return
+	 * @return 转换后的字符串
 	 */
 	public static String transCharset(String str, String sourceCharset, String destCharset) {
 		if(LangUtil.isEmpty(str) || LangUtil.isEmpty(sourceCharset) || LangUtil.isEmpty(destCharset)) {

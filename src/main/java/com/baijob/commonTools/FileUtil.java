@@ -77,7 +77,7 @@ public class FileUtil {
 	/**
 	 * 文件是否存在
 	 * @param path 文件路径
-	 * @return
+	 * @return 是否存在
 	 */
 	public static boolean isExist(String path){
 		return  new File(path).exists();
@@ -100,7 +100,7 @@ public class FileUtil {
 	 * @param path 输出路径，绝对路径
 	 * @param charset 字符集
 	 * @param isAppend 是否追加
-	 * @return
+	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
 	public static BufferedWriter getBufferedWriter(String path, String charset, boolean isAppend) throws IOException {
@@ -126,7 +126,7 @@ public class FileUtil {
 	/**
 	 * 获得一个输出流对象
 	 * @param path 输出到的文件路径，绝对路径
-	 * @return
+	 * @return 输出流对象
 	 * @throws IOException
 	 */
 	public static OutputStream getOutputStream(String path) throws IOException {
@@ -152,7 +152,7 @@ public class FileUtil {
 	 * 获得一个文件读取器
 	 * @param path 绝对路径
 	 * @param charset 字符集
-	 * @return
+	 * @return BufferedReader对象
 	 * @throws IOException
 	 */
 	public static BufferedReader getReader(String path, String charset) throws IOException{
@@ -183,7 +183,7 @@ public class FileUtil {
 	 * @param readerHandler Reader处理类
 	 * @param path 文件的绝对路径
 	 * @param charset 字符集
-	 * @return
+	 * @return 从文件中load出的数据
 	 * @throws IOException
 	 */
 	public static <T> T loadDataFromfile(ReaderHandler<T> readerHandler, String path, String charset) throws IOException {

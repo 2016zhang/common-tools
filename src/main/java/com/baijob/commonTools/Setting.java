@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -137,7 +136,7 @@ public class Setting extends HashMap<String, String> {
 	 * 加载设置文件
 	 * 
 	 * @param settingUrl 配置文件URL
-	 * @return
+	 * @return 加载是否成功
 	 */
 	public boolean load(URL settingUrl) {
 		if (settingUrl == null) {
@@ -170,7 +169,7 @@ public class Setting extends HashMap<String, String> {
 	 * 
 	 * @param settingStream 文件流
 	 * @param isUseVariable 是否使用变量（替换配置文件值中含有的变量）
-	 * @return
+	 * @return 加载成功与否
 	 * @throws IOException
 	 */
 	public boolean load(InputStream settingStream, boolean isUseVariable) throws IOException {
@@ -219,7 +218,7 @@ public class Setting extends HashMap<String, String> {
 	 * 设置变量的正则<br/>
 	 * 正则只能有一个group表示变量本身，剩余为字符 例如 \$\{(name)\}表示${name}变量名为name的一个变量表示
 	 * 
-	 * @param regex
+	 * @param regex 正则
 	 */
 	public void setVarRegex(String regex) {
 		this.reg_var = regex;
@@ -237,7 +236,7 @@ public class Setting extends HashMap<String, String> {
 	/**
 	 * 获取字符型型属性值
 	 * 
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public String getString(String key) {
@@ -247,7 +246,7 @@ public class Setting extends HashMap<String, String> {
 	/**
 	 * 获取数字型型属性值
 	 * 
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public int getInt(String key) throws NumberFormatException{
@@ -257,17 +256,17 @@ public class Setting extends HashMap<String, String> {
 	/**
 	 * 获取波尔型属性值
 	 * 
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public boolean getBool(String key) {
+	public boolean getBool(String key) throws NumberFormatException{
 		return Boolean.parseBoolean(get(key));
 	}
 
 	/**
 	 * 获取long类型属性值
 	 * 
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public long getLong(String key) throws NumberFormatException{
@@ -277,17 +276,17 @@ public class Setting extends HashMap<String, String> {
 	/**
 	 * 获取char类型属性值
 	 * 
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public char getChar(String key) {
+	public char getChar(String key) throws NumberFormatException{
 		return get(key).charAt(0);
 	}
 	
 	/**
 	 * 获取double类型属性值
 	 * 
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public double getDouble(String key) {
@@ -297,8 +296,8 @@ public class Setting extends HashMap<String, String> {
 	/**
 	 * 设置值，无给定键创建之。设置后未持久化
 	 * 
-	 * @param key
-	 * @param value
+	 * @param key 键
+	 * @param value 值
 	 */
 	public void setSetting(String key, Object value) {
 		put(key, value.toString());
@@ -342,9 +341,6 @@ public class Setting extends HashMap<String, String> {
 	 * 
 	 * @param object 被调用的对象
 	 * @throws SettingException 
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
 	 */
 	public void settingToObject(Object object) throws SettingException {
 		try{

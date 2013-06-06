@@ -8,12 +8,11 @@ import java.util.regex.Pattern;
  * 正则相关工具类
  * 
  * @author 路小磊 luxiaolei@baijob.com
- * @createDate 2012-08-06
- * @updateDate 2012-08-12
  */
 public class RegexUtil {
 
 	private RegexUtil() {
+		//阻止实例化
 	}
 
 	/**
@@ -108,8 +107,8 @@ public class RegexUtil {
 	/**
 	 * 判断该字符串是否是IPV4地址
 	 * 
-	 * @param ip
-	 * @return
+	 * @param ip IP地址
+	 * @return 是否是IPV4
 	 */
 	public static boolean isIpv4(String ip) {
 		if(LangUtil.isEmpty(ip)){

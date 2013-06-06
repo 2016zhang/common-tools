@@ -41,15 +41,15 @@ public class Executor {
 	/**
 	 * 新建一个线程池
 	 * @param threadSize 同时执行的线程数大小
-	 * @return
+	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor(int threadSize){
 		return Executors.newFixedThreadPool(threadSize);
 	}
 	
 	/**
-	 * 获得一个线程池
-	 * @return
+	 * 获得一个新的线程池
+	 * @return ExecutorService
 	 */
 	public static ExecutorService newExecutor(){
 		return Executors.newCachedThreadPool();
@@ -76,7 +76,7 @@ public class Executor {
 	/**
 	 * 执行有返回值的异步方法<br/>
 	 * Future代表一个异步执行的操作，通过get()方法可以获得操作的结果，如果异步操作还没有完成，则，get()会使当前线程阻塞
-	 * @return
+	 * @return Future
 	 */
 	public static <T> Future<T> execAsync(Callable<T> task){
 		return executor.submit(task);
@@ -84,7 +84,7 @@ public class Executor {
 	
 	/**
 	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。，若未完成，则会阻塞
-	 * @return
+	 * @return CompletionService
 	 */
 	public static<T> CompletionService<T> newCompletionService(){
 		return new ExecutorCompletionService<T>(executor);
@@ -92,7 +92,7 @@ public class Executor {
 	
 	/**
 	 * 新建一个CompletionService，调用其submit方法可以异步执行多个任务，最后调用take方法按照完成的顺序获得其结果。，若未完成，则会阻塞
-	 * @return
+	 * @return CompletionService
 	 */
 	public static<T> CompletionService<T> newCompletionService(ExecutorService executor){
 		return new ExecutorCompletionService<T>(executor);

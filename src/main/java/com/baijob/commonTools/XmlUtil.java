@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -39,8 +40,8 @@ public class XmlUtil {
 	
 	/**
 	 * 从文件获得DOM对象
-	 * @param xmlPath 相对路径（相对于当前项目的classes路径）
-	 * @return DOM对象
+	 * @param xmlPathBaseClassLoader 相对路径（相对于当前项目的classes路径）
+	 * @return DOM 对象
 	 * @throws DocumentException
 	 */
 	public static Document readDoc(String xmlPathBaseClassLoader) throws DocumentException{
@@ -58,9 +59,20 @@ public class XmlUtil {
 	}
 	
 	/**
+	 * 从URL获得DOM对象
+	 * @param url XML的URL
+	 * @return DOM对象
+	 * @throws DocumentException
+	 * @throws IOException 
+	 */
+	public static Document readDoc(URL url) throws DocumentException, IOException{
+		return new SAXReader().read(url.openStream());
+	}
+	
+	/**
 	 * 创建一个空XML
 	 * @param rootElementName 根节点名
-	 * @return
+	 * @return XML对象
 	 */
 	public static Document createDoc(String rootElementName){
 		Document doc = DocumentHelper.createDocument();

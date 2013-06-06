@@ -87,7 +87,7 @@ public final class Config {
 	
 	/**
 	 * 获取字符型型属性值
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public String getString(String key){
@@ -96,7 +96,7 @@ public final class Config {
 	
 	/**
 	 * 获取数字型型属性值
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public int getInt(String key){
@@ -105,7 +105,7 @@ public final class Config {
 	
 	/**
 	 * 获取波尔型属性值
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public boolean getBool(String key){
@@ -114,7 +114,7 @@ public final class Config {
 	
 	/**
 	 * 获取long类型属性值
-	 * @param 属性名
+	 * @param key 属性名
 	 * @return 属性值
 	 */
 	public long getLong(String key){
@@ -123,8 +123,8 @@ public final class Config {
 	
 	/**
 	 * 设置值，无给定键创建之。设置后未持久化
-	 * @param key
-	 * @param value
+	 * @param key 属性键
+	 * @param value 属性值
 	 */
 	public void setProperty(String key, Object value){
 		props.setProperty(key, value.toString());

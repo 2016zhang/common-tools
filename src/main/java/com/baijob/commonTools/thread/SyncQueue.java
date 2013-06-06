@@ -52,7 +52,7 @@ public class SyncQueue<E> {
 	/**
 	 * 入队列。若队列已满，则阻塞线程
 	 * 
-	 * @param item
+	 * @param item 项
 	 * @return 是否成功插入
 	 * @throws InterruptedException
 	 * @throws NullPointerException item为空时，抛出此异常
@@ -84,7 +84,7 @@ public class SyncQueue<E> {
 	/**
 	 * 出队列。若队列空，阻塞队列<br/>
 	 * 如果队列已经关闭，只有队列为空时才返回null
-	 * @return
+	 * @return 项
 	 * @throws InterruptedException
 	 */
 	public E take() throws InterruptedException {
@@ -109,7 +109,7 @@ public class SyncQueue<E> {
 	/**
 	 * 队列中的项数
 	 * 
-	 * @return
+	 * @return 项数
 	 */
 	public int size() {
 		lock.lock();
@@ -180,7 +180,7 @@ public class SyncQueue<E> {
 
 	/**
 	 * 队列是否已经关闭
-	 * @return
+	 * @return 是否已经关闭
 	 */
 	public boolean isClosed() {
 		return this.isClosed;
@@ -199,7 +199,8 @@ public class SyncQueue<E> {
 	}
 
 	/**
-	 * 插入条目
+	 * 插入条目（项）
+	 * @param item 项
 	 */
 	private void insert(E item) {
 		items[putIndex] = item;
@@ -210,7 +211,8 @@ public class SyncQueue<E> {
 	}
 
 	/**
-	 * 提取条目
+	 * 提取条目（项）
+	 * @return 项
 	 */
 	private E extract() {
 		if (count == 0)

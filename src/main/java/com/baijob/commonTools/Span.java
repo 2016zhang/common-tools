@@ -83,7 +83,7 @@ public class Span {
 	/*--------------------------功能方法 start-------------------------------*/
 	/**
 	 * 获得两数之差
-	 * @return
+	 * @return 两数差
 	 */
 	public long getSub(){
 		return max - min;
@@ -118,7 +118,7 @@ public class Span {
 	/**
 	 * ID区间是否为空。
 	 * 判断方式：max == 0 或 min == max
-	 * @return
+	 * @return 是否为空
 	 */
 	public boolean isEmpty(){
 		if(max == 0 || min > max){
@@ -131,24 +131,25 @@ public class Span {
 	 * 比较并替换掉对象中已经存在的ID<br/>
 	 * ID计数 +1<br/>
 	 * 所提供ID如果大于max或小于min时，替换掉相应的值
-	 * @param id 被检查的ID
+	 * @param number 被检查的数字
 	 */
-	public void compareToReplace(long id){
-		if(id > max) max = id;
-		if(id < min) min = id;
+	public void compareToReplace(long number){
+		if(number > max) max = number;
+		if(number < min) min = number;
 	}
 	
 	/**
-	 * 是否在区间之内
-	 * @param id
+	 * 是否在区间之内（闭区间）
+	 * @param number 数字
+	 * @return 是否在区间内
 	 */
-	public boolean isInBetween(long id){
-		return (id >= min && id <= max);
+	public boolean isInBetween(long number){
+		return (number >= min && number <= max);
 	}
 	
 	/**
 	 * 实例化一个空Span
-	 * @return
+	 * @return Span空对象
 	 */
 	public static Span newInstance(){
 		return new Span();

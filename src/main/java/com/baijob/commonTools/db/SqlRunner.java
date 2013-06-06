@@ -33,7 +33,7 @@ public class SqlRunner {
 	 * @param sql 查询语句
 	 * @param rsh 结果集处理对象
 	 * @param params 参数
-	 * @return
+	 * @return 结果对象
 	 * @throws SQLException
 	 */
 	public <T> T query(String sql, RsHandler<T> rsh, Object... params) throws SQLException {
@@ -57,7 +57,7 @@ public class SqlRunner {
 	 * @param sql 查询语句
 	 * @param rsh 结果集处理对象
 	 * @param params 参数
-	 * @return
+	 * @return 结果对象
 	 * @throws SQLException
 	 */
 	public <T> T query(Connection conn, String sql, RsHandler<T> rsh, Object... params) throws SQLException {
@@ -104,7 +104,7 @@ public class SqlRunner {
 	 * @param conn 数据库连接对象
 	 * @param sql SQL
 	 * @param params 参数
-	 * @return
+	 * @return 影响的行数
 	 * @throws SQLException
 	 */
 	public int update(Connection conn, String sql, Object... params) throws SQLException {
@@ -170,8 +170,8 @@ public class SqlRunner {
 	/**
 	 * 填充SQL的参数。
 	 * 
-	 * @param ps
-	 * @param params
+	 * @param ps PreparedStatement
+	 * @param params SQL参数
 	 * @throws SQLException
 	 */
 	private void fillParams(PreparedStatement ps, Object... params) throws SQLException {

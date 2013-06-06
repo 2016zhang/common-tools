@@ -20,16 +20,21 @@ public class Words extends HashMap<Character, Words>{
 	/** 关键字类型，是否最后一个字符 */
 	public Map<Integer, Boolean> types = new HashMap<Integer, Boolean>();
 	
+	//------------------------------------------------------------------------------- 构造 start
+	/**
+	 * 默认构造
+	 */
 	public Words() {
 	}
 	
 	/**
-	 * 
+	 * 构造方法
 	 * @param type 类型
 	 */
 	public Words(int type) {
 		types.put(type, false);
 	}
+	//------------------------------------------------------------------------------- 构造 end
 	
 	/**
 	 * 添加单词，使用默认类型
@@ -79,7 +84,7 @@ public class Words extends HashMap<Character, Words>{
 	/**
 	 * 指定文本是否包含树中的词，默认类型
 	 * @param text 被检查的文本
-	 * @return
+	 * @return 是否包含
 	 */
 	public boolean contains(String text) {
 		return contains(text, DEFAULT_TYPE);
@@ -89,7 +94,7 @@ public class Words extends HashMap<Character, Words>{
 	 * 指定文本是否包含树中的词
 	 * @param text 被检查的文本
 	 * @param type 类型
-	 * @return
+	 * @return 是否包含
 	 */
 	public boolean contains(String text, int type){
 		while(! LangUtil.isEmpty(text)){
@@ -115,7 +120,7 @@ public class Words extends HashMap<Character, Words>{
 	/**
 	 * 获得第一个匹配的关键字，默认类型
 	 * @param text 被检查的文本
-	 * @return
+	 * @return 匹配到的关键字
 	 */
 	public String getFindedFirstWord(String text) {
 		return getFindedFirstWord(text, DEFAULT_TYPE);
@@ -125,7 +130,7 @@ public class Words extends HashMap<Character, Words>{
 	 * 获得第一个匹配的关键字
 	 * @param text 被检查的文本
 	 * @param type 类型
-	 * @return
+	 * @return 匹配到的关键字
 	 */
 	public String getFindedFirstWord(String text, int type){
 		while(! LangUtil.isEmpty(text)){

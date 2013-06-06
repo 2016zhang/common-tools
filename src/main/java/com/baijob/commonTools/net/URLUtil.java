@@ -20,7 +20,7 @@ public class URLUtil {
 	/**
 	 * 获得URL
 	 * @param pathBaseClassLoader 相对路径（相对于classes）
-	 * @return
+	 * @return URL
 	 */
 	public static URL getURL(String pathBaseClassLoader){
 		return URLUtil.class.getClassLoader().getResource(pathBaseClassLoader);
@@ -30,7 +30,7 @@ public class URLUtil {
 	 * 获得URL
 	 * @param path 相对给定 class所在的路径
 	 * @param clazz 指定class
-	 * @return
+	 * @return URL
 	 */
 	public static URL getURL(String path, Class<?> clazz){
 		return clazz.getResource(path);
@@ -39,7 +39,7 @@ public class URLUtil {
 	/**
 	 * 获得URL，常用于使用绝对路径时的情况
 	 * @param configFile URL对应的文件对象
-	 * @return
+	 * @return URL
 	 */
 	public static URL getURL(File configFile){
 		try {

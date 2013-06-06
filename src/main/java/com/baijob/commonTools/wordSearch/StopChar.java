@@ -30,10 +30,10 @@ public class StopChar {
 			"√", "$", "@", "*", "&", "#", "卐", "㎎", "㎏", "㎜", "㎝", "㎞", "㎡", "㏄", "㏎", "㏑", "㏒", "㏕" }));
 
 	/**
-	 * 判断指定的词是否是需要过滤的词。
+	 * 判断指定的词是否是不处理的词。
 	 * 如果参数为空，则返回true，因为空也属于不处理的字符。
 	 * @param ch 指定的词
-	 * @return
+	 * @return 是否是不处理的词
 	 */
 	public static boolean isStopChar(String ch) {
 		if (LangUtil.isEmpty(ch)) return true;
@@ -41,11 +41,11 @@ public class StopChar {
 	}
 	
 	/**
-	 * 判断指定的词是否是需要过滤的词。
+	 * 判断指定的词是否是不处理的词。
 	 * 如果参数为空，则返回true，因为空也属于不处理的字符。
 	 * 
 	 * @param ch 指定的词
-	 * @return
+	 * @return 是否是不处理的词
 	 */
 	public static boolean isStopChar(char ch) {
 		return STOP_WORD.contains(String.valueOf(ch));

@@ -21,7 +21,7 @@ public class TaskScheduler extends Timer{
 	/**
 	 * 实例化一个新对象
 	 * @param isDaemon 是否守护进程
-	 * @return
+	 * @return 任务调度对象
 	 */
 	public static TaskScheduler newInstance(boolean isDaemon){
 		return new TaskScheduler(isDaemon);

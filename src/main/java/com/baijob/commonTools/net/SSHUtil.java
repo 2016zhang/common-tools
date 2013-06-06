@@ -156,7 +156,7 @@ public class SSHUtil {
 	
 	/**
 	 * 关闭SSH连接会话
-	 * @param 主机
+	 * @param host 主机
 	 */
 	synchronized public static void close(String host){
 		Session session = sessionPool.get(host);

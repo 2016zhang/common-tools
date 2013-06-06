@@ -42,8 +42,10 @@ public class Ecosystem<E> extends SyncQueue<E>{
 	
 	/**
 	 * 增加一个生产者
-	 * @param <T>
+	 * @param producerClass 生产者
+	 * @param name 名称
 	 * @param producer 生产者线程
+	 * @return 生产者对象
 	 */
 	public <T extends Producer<E>> T newProducer(Class<T> producerClass, String name){
 		if(this.isClosed()) {
@@ -85,7 +87,9 @@ public class Ecosystem<E> extends SyncQueue<E>{
 	
 	/**
 	 * 增加一个消费者
-	 * @param producer 消费者线程
+	 * @param consumerClass 消费者类
+	 * @param name 名称
+	 * @return 消费者对象
 	 */
 	public <T extends Consumer<E>> T newConsumer(Class<T> consumerClass, String name){
 		if(this.isClosed()) {
@@ -128,7 +132,7 @@ public class Ecosystem<E> extends SyncQueue<E>{
 	
 	/**
 	 * 运行中的生产者数
-	 * @return
+	 * @return 生产者数
 	 */
 	public int activeProducerCount(){
 		return this.activeProducerCount;
@@ -136,7 +140,7 @@ public class Ecosystem<E> extends SyncQueue<E>{
 	
 	/**
 	 * 运行中的消费者数
-	 * @return
+	 * @return 消费者数
 	 */
 	public int activeConsumerCount(){
 		return this.activeConsumerCount;

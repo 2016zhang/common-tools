@@ -36,7 +36,6 @@ public class HttpUtil {
 	 * 发送get请求
 	 * @param urlString 网址
 	 * @param customCharset 自定义请求字符集
-	 * @param isCheckStatus 是否只是检查状态码
 	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
 	 * @throws IOException
 	 */
@@ -122,7 +121,7 @@ public class HttpUtil {
 	
 	/**
 	 * 格式化Http Header 的name部分
-	 * @param headerName
+	 * @param headerName 头名称
 	 * @return 格式化后的 header name, 如果headerName为空，返回null
 	 */
 	public static String formatHeaderName(String headerName) {
@@ -166,7 +165,7 @@ public class HttpUtil {
 	/**
 	 * 获取客户端IP
 	 * @param request 请求对象
-	 * @return
+	 * @return IP地址
 	 */
 	public static String getClientIP(HttpServletRequest request) {
 		String ip = request.getHeader("X-Forwarded-For");
@@ -191,8 +190,8 @@ public class HttpUtil {
 	
 	/**
 	 * 从Http连接的头信息中获得字符集
-	 * @param conn
-	 * @return
+	 * @param conn HTTP连接对象
+	 * @return 字符集
 	 */
 	private static String getCharsetFromConn(HttpURLConnection conn){
 		String charset = conn.getContentEncoding();
@@ -206,8 +205,8 @@ public class HttpUtil {
 	/**
 	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br/>
 	 * 
-	 * @param checkString
-	 * @return
+	 * @param checkString 被检测的字符串
+	 * @return 是否未知
 	 */
 	private static boolean isUnknow(String checkString) {
 		return LangUtil.isEmpty(checkString) || UNKNOW.equalsIgnoreCase(checkString);

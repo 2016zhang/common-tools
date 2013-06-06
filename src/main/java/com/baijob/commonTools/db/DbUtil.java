@@ -28,7 +28,7 @@ public class DbUtil {
 	 * 实例化一个新的SQL运行对象
 	 * 
 	 * @param ds 数据源
-	 * @return
+	 * @return SQL执行类
 	 */
 	public static SqlRunner newSqlRunner(DataSource ds) {
 		return new SqlRunner(ds);
@@ -41,7 +41,7 @@ public class DbUtil {
 	 * @param port 端口号
 	 * @param dbName 数据库名
 	 * @param jdbcParam 参数
-	 * @return
+	 * @return JDBC字符串
 	 */
 	public static String buildJdbcUrl(String protocol, String host, int port, String dbName, String jdbcParam) {
 		jdbcParam = jdbcParam == null ? "" : jdbcParam;

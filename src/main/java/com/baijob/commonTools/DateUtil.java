@@ -36,7 +36,7 @@ public class DateUtil {
 	
 	/**
 	 * 当前时间，格式 yyyy-MM-dd HH:mm:ss
-	 * @return
+	 * @return 当前时间的标准形式字符串
 	 */
 	public static String now() {
 		return formatDateTime(new Date());
@@ -44,7 +44,7 @@ public class DateUtil {
 	
 	/**
 	 * 当前日期，格式 yyyy-MM-dd
-	 * @return
+	 * @return 当前日期的标准形式字符串
 	 */
 	public static String today() {
 		return formatDate(new Date());
@@ -55,7 +55,7 @@ public class DateUtil {
 	 * 根据特定格式格式化日期
 	 * @param date 被格式化的日期
 	 * @param format 格式
-	 * @return
+	 * @return 格式化后的字符串
 	 */
 	public static String format(Date date, String format){
 		return new SimpleDateFormat(format).format(date);
@@ -63,18 +63,18 @@ public class DateUtil {
 	
 	/**
 	 * 格式 yyyy-MM-dd HH:mm:ss
-	 * @param d
-	 * @return
+	 * @param date 被格式化的日期
+	 * @return 格式化后的日期
 	 */
-	public static String formatDateTime(Date d) {
+	public static String formatDateTime(Date date) {
 //		return format(d, "yyyy-MM-dd HH:mm:ss");
-		return NORM_DATETIME_FORMAT.format(d);
+		return NORM_DATETIME_FORMAT.format(date);
 	}
 	
 	/**
 	 * 格式化为Http的标准日期格式
-	 * @param date 日期
-	 * @return
+	 * @param date 被格式化的日期
+	 * @return HTTP标准形式日期字符串
 	 */
 	public static String formatHttpDate(Date date) {
 //		return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).format(date);
@@ -83,12 +83,12 @@ public class DateUtil {
 	
 	/**
 	 * 格式 yyyy-MM-dd
-	 * @param d
-	 * @return
+	 * @param date 被格式化的日期
+	 * @return 格式化后的字符串
 	 */
-	public static String formatDate(Date d) {
+	public static String formatDate(Date date) {
 //		return format(d, "yyyy-MM-dd");
-		return NORM_DATE_FORMAT.format(d);
+		return NORM_DATE_FORMAT.format(date);
 	}
 	// ------------------------------------ Format end ----------------------------------------------
 	
@@ -96,8 +96,8 @@ public class DateUtil {
 	/**
 	 * 将特定格式的日期转换为Date对象
 	 * @param dateString 特定格式的日期
-	 * @param format 格式
-	 * @return
+	 * @param format 格式，例如yyyy-MM-dd
+	 * @return 日期对象
 	 */
 	public static Date parse(String dateString, String format){
 		try {
@@ -110,30 +110,30 @@ public class DateUtil {
 	
 	/**
 	 * 格式yyyy-MM-dd HH:mm:ss
-	 * @param s
-	 * @return
+	 * @param dateString 标准形式的时间字符串
+	 * @return 日期对象
 	 */
-	public static Date parseDateTime(String s){
+	public static Date parseDateTime(String dateString){
 //		return parse(s, "yyyy-MM-dd HH:mm:ss");
 		try {
-			return NORM_DATETIME_FORMAT.parse(s);
+			return NORM_DATETIME_FORMAT.parse(dateString);
 		} catch (ParseException e) {
-			logger.error("Parse " + s + " with format " + NORM_DATETIME_FORMAT.toPattern() + " error!", e);
+			logger.error("Parse " + dateString + " with format " + NORM_DATETIME_FORMAT.toPattern() + " error!", e);
 		}
 		return null;
 	}
 	
 	/**
 	 * 格式yyyy-MM-dd
-	 * @param s
-	 * @return
+	 * @param dateString 标准形式的日期字符串
+	 * @return 日期对象
 	 */
-	public static Date parseDate(String s){
+	public static Date parseDate(String dateString){
 //		return parse(s, "yyyy-MM-dd");
 		try {
-			return NORM_DATE_FORMAT.parse(s);
+			return NORM_DATE_FORMAT.parse(dateString);
 		} catch (ParseException e) {
-			logger.error("Parse " + s + " with format " + NORM_DATE_FORMAT.toPattern() + " error!", e);
+			logger.error("Parse " + dateString + " with format " + NORM_DATE_FORMAT.toPattern() + " error!", e);
 		}
 		return null;
 	}
@@ -144,7 +144,7 @@ public class DateUtil {
 	 * @param date 基准日期
 	 * @param calendarField 偏移的粒度大小（小时、天、月等）使用Calendar中的常数
 	 * @param offsite 偏移量，正数为向后偏移，负数为向前偏移
-	 * @return
+	 * @return 偏移后的日期
 	 */
 	public static Date getOffsiteDate(Date date, int calendarField, int offsite){
 		Calendar cal = Calendar.getInstance();
@@ -159,7 +159,7 @@ public class DateUtil {
 	 * @param subtrahend 减数日期
 	 * @param minuend 被减数日期
 	 * @param diffField 相差的选项：相差的天、小时
-	 * @return
+	 * @return 日期差
 	 */
 	public static long dateDiff(Date subtrahend, Date minuend, long diffField){ 
 	  long diff = minuend.getTime() - subtrahend.getTime();

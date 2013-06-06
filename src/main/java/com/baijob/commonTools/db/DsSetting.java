@@ -57,7 +57,7 @@ public class DsSetting {
 	private Setting dbSetting;
 
 	/**
-	 * 
+	 * 自定义数据源和SSH的构造
 	 * @param dataSourceName 数据源名称
 	 * @param sshTunnel SSH名称
 	 * @param dbSetting 数据配置文件
@@ -79,7 +79,7 @@ public class DsSetting {
 	}
 	
 	/**
-	 * 
+	 * 使用数据库配置文件中的数据源和SSH的构造
 	 * @param dbSetting 数据配置文件
 	 */
 	public DsSetting(Setting dbSetting) {
@@ -93,11 +93,11 @@ public class DsSetting {
 	/**
 	 * 生成数据源相关参数的key
 	 * 
-	 * @param key 模板
-	 * @return
+	 * @param keyTemplate 模板
+	 * @return key名称
 	 */
-	public String genKey(String key) {
-		String replacedKey = key.replace(DsSetting.VAR_DS, dsName).replace(DsSetting.VAR_SSH, ssh);
+	public String genKey(String keyTemplate) {
+		String replacedKey = keyTemplate.replace(DsSetting.VAR_DS, dsName).replace(DsSetting.VAR_SSH, ssh);
 		logger.debug("Generate datasource setting key=>{}", replacedKey);
 		return replacedKey;
 	}
@@ -105,8 +105,8 @@ public class DsSetting {
 	/**
 	 * String类型值
 	 * 
-	 * @param key
-	 * @return
+	 * @param key 键
+	 * @return 对应值
 	 */
 	public String getString(String key) {
 		return dbSetting.getString(genKey(key));
@@ -115,17 +115,16 @@ public class DsSetting {
 	/**
 	 * Int类型值
 	 * 
-	 * @param key
-	 * @return
+	 * @param key 键
+	 * @return 对应值
 	 */
 	public int getInt(String key) {
 		return dbSetting.getInt(genKey(key));
 	}
 
 	/**
-	 * 数据源名称
-	 * 
-	 * @return
+	 * 获得默认数据源名称
+	 * @return 数据源名称
 	 */
 	public String getName() {
 		return getDsName(dsName, ssh);
@@ -133,8 +132,7 @@ public class DsSetting {
 
 	/**
 	 * 是否开启了SSH功能
-	 * 
-	 * @return
+	 * @return 是否开启SSH
 	 */
 	public boolean isEnableSSH() {
 		return !SSHUtil.SSH_NONE.equals(ssh);
@@ -142,8 +140,7 @@ public class DsSetting {
 
 	/**
 	 * 获得SSH主机名
-	 * 
-	 * @return
+	 * @return SSH主机名
 	 */
 	public String getSshHost() {
 		return getString(KEY_SSH_HOST);
@@ -151,8 +148,7 @@ public class DsSetting {
 
 	/**
 	 * 获得SSH端口号
-	 * 
-	 * @return
+	 * @return SSH端口号
 	 */
 	public int getSshPort() {
 		return getInt(KEY_SSH_PORT);
@@ -160,8 +156,7 @@ public class DsSetting {
 
 	/**
 	 * 获得SSH连接用户名
-	 * 
-	 * @return
+	 * @return SSH用户名
 	 */
 	public String getSshUser() {
 		return getString(KEY_SSH_USER);
@@ -169,8 +164,7 @@ public class DsSetting {
 
 	/**
 	 * 获得SSH连接密码
-	 * 
-	 * @return
+	 * @return SSH密码
 	 */
 	public String getSshPass() {
 		return getString(KEY_SSH_PASS);
@@ -178,8 +172,7 @@ public class DsSetting {
 
 	/**
 	 * 获得数据库主机名
-	 * 
-	 * @return
+	 * @return 主机名
 	 */
 	public String getDsHost() {
 		return getString(KEY_DS_HOST);
@@ -187,8 +180,7 @@ public class DsSetting {
 
 	/**
 	 * 获得数据库端口号
-	 * 
-	 * @return
+	 * @return 端口
 	 */
 	public int getDsPort() {
 		return getInt(KEY_DS_PORT);
@@ -196,8 +188,7 @@ public class DsSetting {
 
 	/**
 	 * 获得库名称
-	 * 
-	 * @return
+	 * @return 数据库名称
 	 */
 	public String getDsDb() {
 		return getString(KEY_DS_DB);
@@ -205,8 +196,7 @@ public class DsSetting {
 
 	/**
 	 * 获得数据库访问用户名
-	 * 
-	 * @return
+	 * @return 用户名
 	 */
 	public String getDsUser() {
 		return getString(KEY_DS_USER);
@@ -214,8 +204,7 @@ public class DsSetting {
 
 	/**
 	 * 获得数据库访问密码
-	 * 
-	 * @return
+	 * @return 密码
 	 */
 	public String getDsPass() {
 		return getString(KEY_DS_PASS);
@@ -223,7 +212,7 @@ public class DsSetting {
 
 	/**
 	 * 获得JDBC驱动
-	 * @return
+	 * @return JDBC驱动类字符串
 	 */
 	public String getJdbcDriver() {
 		String jdbcDriver = dbSetting.getString(DRIVER_KEY);
@@ -232,7 +221,7 @@ public class DsSetting {
 	
 	/**
 	 * 获得协议
-	 * @return
+	 * @return 协议
 	 */
 	public String getProtocol() {
 		String protocol = dbSetting.getString(PROTOCOL_KEY);
@@ -249,7 +238,7 @@ public class DsSetting {
 	
 	/**
 	 * 获得SSH连接信息
-	 * @return
+	 * @return 连接对象
 	 */
 	public Connector getSSHConnector() {
 		return new Connector(getSshHost(), getSshPort(), getSshUser(), getSshPass());
@@ -259,7 +248,7 @@ public class DsSetting {
 	 * 获得数据源和SSH节后的拼接名称
 	 * @param dsName 数据源名称
 	 * @param sshName ssh名称
-	 * @return
+	 * @return 拼接后名称
 	 */
 	public static String getDsName(String dsName, String sshName){
 		return dsName + "." + sshName;

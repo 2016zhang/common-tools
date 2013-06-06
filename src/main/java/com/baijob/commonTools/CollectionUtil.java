@@ -21,10 +21,10 @@ import java.util.Stack;
 public class CollectionUtil {
 	/**
 	 * 以 conjunction 为分隔符将集合转换为字符串
-	 * @param <T>
+	 * @param <T> 被处理的集合
 	 * @param collection 集合
 	 * @param conjunction 分隔符
-	 * @return
+	 * @return 连接后的字符串
 	 */
 	public static <T> String join(Iterable<T> collection, String conjunction) {
 		StringBuilder sb = new StringBuilder();
@@ -42,10 +42,10 @@ public class CollectionUtil {
 	
 	/**
 	 * 以 conjunction 为分隔符将数组转换为字符串
-	 * @param <T>
+	 * @param <T> 被处理的集合
 	 * @param array 数组
 	 * @param conjunction 分隔符
-	 * @return
+	 * @return 连接后的字符串
 	 */
 	public static <T> String join(T[] array, String conjunction) {
 		StringBuilder sb = new StringBuilder();
@@ -82,7 +82,7 @@ public class CollectionUtil {
 	
 	/**
 	 * 切取部分数据
-	 * @param <T>
+	 * @param <T> 集合元素类型
 	 * @param surplusAlaDatas 原数据
 	 * @param partSize 每部分数据的长度
 	 * @return 切取出的数据或null
@@ -107,7 +107,7 @@ public class CollectionUtil {
 	
 	/**
 	 * 新建一个HashMap
-	 * @return
+	 * @return HashMap对象
 	 */
 	public static <T, K> HashMap<T, K> newHashMap(){
 		return new HashMap<T, K>();
@@ -115,7 +115,7 @@ public class CollectionUtil {
 	
 	/**
 	 * 新建一个HashSet
-	 * @return
+	 * @return HashSet对象
 	 */
 	public static <T> HashSet<T> newHashSet(){
 		return new HashSet<T>();
@@ -123,7 +123,7 @@ public class CollectionUtil {
 	
 	/**
 	 * 新建一个ArrayList
-	 * @return
+	 * @return ArrayList对象
 	 */
 	public static <T> ArrayList<T> newArrayList(){
 		return new ArrayList<T>();

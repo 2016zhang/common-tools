@@ -1,9 +1,11 @@
 package com.baijob.commonTools.net;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +45,7 @@ public class AccessControl{
 	/** 用户组 */
 	private static Set<String> groups = new HashSet<String>();
 	/** 用户列表 */
-	private static List<Connector> users = new ArrayList<Connector>();
+	private static Map<String, Connector> users = new HashMap<String, Connector>();
 	
 	public AccessControl() {
 		this.init(ACCESS_PATH);
@@ -67,15 +69,25 @@ public class AccessControl{
 		}
 		Element access = doc.getRootElement();
 		
-		//初始化用户列表
+		//初始化用户组
 		Element auth = access.element("auth");
 		List<Element> groupList = auth.elements("group");
 		for (Element group : groupList) {
 			groups.add(group.attributeValue("name"));
 		}
+		//初始化用户列表
 		List<Element> userList = auth.elements("user");
 		for (Element user : userList) {
-			users.add(new Connector(user.attributeValue("name"), user.attributeValue("pass"), user.attributeValue("group")));
+			String name =user.attributeValue("name");
+			String pass =user.attributeValue("pass");
+			String group =user.attributeValue("group");
+			if(groups.contains(group)) {
+				//用户必须在组中
+				users.put(buildKey(name, pass, group), new Connector(name, pass, group));
+			}else {
+				logger.error("【Access】Bad group {}", group);
+				continue;
+			}
 		}
 		
 		//初始化黑名单（白名单）
@@ -107,20 +119,20 @@ public class AccessControl{
 	 * @return 是否通过验证
 	 */
 	public boolean isAuthorized(String username, String pass, String group){
-		if(groups.contains(group)) {
-			for (Connector user : users) {
-				if(user.getUser().equals(username) && user.getPassword().equals(pass)) {
-					return true;
-				}
+		Connector connector = users.get(buildKey(username, pass, group));
+		if(connector != null) {
+			if(connector.getUser().equals(username) && connector.getPassword().equals(pass) && connector.getGroup().equals(group)) {
+				return true;
 			}
+			return true;
 		}
 		return false;
 	}
 	
 	/**
 	 * 是否允许指定的请求访问
-	 * @param request
-	 * @return
+	 * @param request 请求对象
+	 * @return 是否允许访问
 	 */
 	public boolean isPermit(HttpServletRequest request){
 		return isPermit(HttpUtil.getClientIP(request));
@@ -128,8 +140,8 @@ public class AccessControl{
 	
 	/**
 	 * 是否允许给定的IP访问
-	 * @param ip
-	 * @return
+	 * @param ip IP地址
+	 * @return 是否允许
 	 */
 	public boolean isPermit(String ip){
 		if(TYPE_WHITE.equals(type)){
@@ -147,7 +159,7 @@ public class AccessControl{
 	 * @param pass 密码
 	 * @param group 用户组
 	 * @param ip IP段
-	 * @return
+	 * @return 是否允许
 	 */
 	public boolean isAuthorizedWithIP(String username, String pass, String group, String ip) {
 		return isPermit(ip) && isAuthorized(username, pass, group);
@@ -155,8 +167,8 @@ public class AccessControl{
 	
 	/**
 	 * IP是否位于名单中
-	 * @param ip
-	 * @return
+	 * @param ip IP地址
+	 * @return 是否在名单中
 	 */
 	private boolean isInSection(String ip){
 		long ipLong = SocketUtil.ipv4ToLong(ip);
@@ -166,5 +178,16 @@ public class AccessControl{
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * 根据用户名、密码和组构建一个key，用于查找用户
+	 * @param name 用户名
+	 * @param pass 密码
+	 * @param group 组
+	 * @return KEY
+	 */
+	private String buildKey(String name, String pass, String group) {
+		return name + "#" + pass + "#" + group;
 	}
 }

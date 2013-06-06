@@ -1,0 +1,9 @@
+com.baijob.commonTools
+com.baijob.commonTools.Exceptions
+com.baijob.commonTools.db
+com.baijob.commonTools.db.ds
+com.baijob.commonTools.mail
+com.baijob.commonTools.net
+com.baijob.commonTools.thread
+com.baijob.commonTools.wordSearch
+com.baijob.commonTools.workflow

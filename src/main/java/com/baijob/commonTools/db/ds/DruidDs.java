@@ -139,7 +139,7 @@ public class DruidDs {
 	/**
 	 * 获得默认数据源（连接池），链接信息来自于配置文件
 	 * 
-	 * @return
+	 * @return 数据源
 	 * @throws ConnException
 	 */
 	synchronized public static DataSource getDataSource() throws ConnException {
@@ -149,8 +149,8 @@ public class DruidDs {
 	/**
 	 * 获得一个数据库连接池中的连接
 	 * 
-	 * @param conn 链接名称，此名称在配置文件中定义
-	 * @param isInSSH 连接是否在已经建立的SSH之上连接
+	 * @param datasource 数据源名称，此名称在配置文件中定义
+	 * @param sshName SSH连接名称
 	 * @return 连接对象
 	 * @throws SQLException
 	 * @throws ConnException

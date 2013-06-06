@@ -15,7 +15,7 @@ public class HtmlUtil {
 	/**
 	 * 还原被转义的HTML特殊字符
 	 * @param htmlStr 包含转义符的HTML内容
-	 * @return
+	 * @return 转换后的字符串
 	 */
 	public static String restoreEscaped(String htmlStr) {
 		if (LangUtil.isEmpty(htmlStr)) {
