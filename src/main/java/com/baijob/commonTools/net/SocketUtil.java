@@ -45,7 +45,7 @@ public class SocketUtil {
 	 */
 	public static boolean isValidPort(int port) {
 		//有效端口是0～65535
-		return port >= 0 || port <= 0xFFFF;
+		return port >= 0 && port <= 0xFFFF;
 	}
 
 	/**
