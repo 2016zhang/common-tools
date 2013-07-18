@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -81,5 +84,20 @@ public class DbUtil {
 			} catch (SQLException e) {
 			}
 		}
+	}
+	
+	/**
+	 * 获得JNDI数据源
+	 * @param jndiName JNDI名称
+	 * @return 数据源
+	 */
+	public static DataSource getJndiDs(String jndiName) {
+		try {
+			Context ctx = new InitialContext();
+			return (DataSource) ctx.lookup(jndiName);
+		} catch (NamingException e) {
+			logger.error("Find JNDI datasource error!", e);
+		}
+		return null;
 	}
 }

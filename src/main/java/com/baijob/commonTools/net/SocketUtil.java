@@ -70,7 +70,7 @@ public class SocketUtil {
 
 	/**
 	 * 根据ip地址计算出long型的数据
-	 * @param ipStr IP V4 地址
+	 * @param strIP IP V4 地址
 	 * @return long值
 	 */
 	public static long ipv4ToLong(String strIP) {

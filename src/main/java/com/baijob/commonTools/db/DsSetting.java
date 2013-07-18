@@ -43,6 +43,7 @@ public class DsSetting {
 	public final static String KEY_SSH_PASS = "${ssh}.ssh.pass";
 
 	// DATASOURCE KEYS
+	public final static String KEY_DS_URL = "${ds}.ds.url";
 	public final static String KEY_DS_HOST = "${ds}.ds.host";
 	public final static String KEY_DS_PORT = "${ds}.ds.port";
 	public final static String KEY_DS_DB     = "${ds}.ds.db";

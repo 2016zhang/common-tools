@@ -70,7 +70,6 @@ public class HashUtil {
 	 * Bernstein's hash
 	 * 
 	 * @param key 输入字节数组
-	 * @param level 初始hash常量
 	 * @return 结果hash
 	 */
 	public static int bernstein(String key) {
@@ -86,7 +85,7 @@ public class HashUtil {
 	 * @param key 字节数组
 	 * @param mask 掩码
 	 * @param tab tab
-	 * @return
+	 * @return hash值
 	 */
 	public static int universal(char[] key, int mask, int[] tab) {
 		int hash = key.length, i, len = key.length;
@@ -117,7 +116,7 @@ public class HashUtil {
 	 * @param key 字节数组
 	 * @param mask 掩码
 	 * @param tab tab
-	 * @return
+	 * @return hash值
 	 */
 	public static int zobrist(char[] key, int mask, int[][] tab) {
 		int hash, i;
@@ -150,7 +149,7 @@ public class HashUtil {
 	/**
 	 * 改进的32位FNV算法1
 	 * 
-	 * @param data数组
+	 * @param data 数组
 	 * @return hash结果
 	 */
 	public static int FNVHash1(byte[] data) {

@@ -44,7 +44,6 @@ public class Ecosystem<E> extends SyncQueue<E>{
 	 * 增加一个生产者
 	 * @param producerClass 生产者
 	 * @param name 名称
-	 * @param producer 生产者线程
 	 * @return 生产者对象
 	 */
 	public <T extends Producer<E>> T newProducer(Class<T> producerClass, String name){
