@@ -31,7 +31,8 @@ public class ConsistentHash<T> {
 			
 			@Override
 			public Integer hash(Object key) {
-				return key.hashCode();
+				//默认使用FNV1hash算法
+				return HashUtil.FNVHash1(key.toString());
 			}
 		};
 		//初始化节点
@@ -64,7 +65,7 @@ public class ConsistentHash<T> {
 	 */
 	public void add(T node) {
 		for (int i = 0; i < numberOfReplicas; i++) {
-			circle.put(hashFunc.hash(node.toString()), node);
+			circle.put(hashFunc.hash(node.toString() + i), node);
 		}
 	}
 
