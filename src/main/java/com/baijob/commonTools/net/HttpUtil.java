@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,10 @@ public class HttpUtil {
 	public final static String UNKNOW = "unknown";
 	
 	private static Map<String, String> cookies;
+	
+	public HttpUtil() {
+		cookies = new HashMap<String, String>();
+	}
 	
 	/**
 	 * 发送get请求
@@ -59,7 +64,8 @@ public class HttpUtil {
 		}
 		
 		/* 获取内容 */
-		StringBuilder content = new StringBuilder(conn.getContentLength());
+		int contentLength = conn.getContentLength();
+		StringBuilder content = new StringBuilder(contentLength > 0 ? contentLength : 16);
 		BufferedReader bufferedReader = null;
 		String charset = getCharsetFromConn(conn);
 		if(charset == null){
@@ -84,6 +90,8 @@ public class HttpUtil {
 	 * @return 编码后的字符
 	 */
 	public static String encode(String content, String charset){
+		if(LangUtil.isEmpty(content)) return content;
+		
 		String encodeContnt = null;
 		try {
 			encodeContnt = URLEncoder.encode(content, charset);
@@ -99,6 +107,8 @@ public class HttpUtil {
 	 * @return 编码后的字符
 	 */
 	public static String decode(String content, String charset){
+		if(LangUtil.isEmpty(content)) return content;
+		
 		String encodeContnt = null;
 		try {
 			encodeContnt = URLDecoder.decode(content, charset);

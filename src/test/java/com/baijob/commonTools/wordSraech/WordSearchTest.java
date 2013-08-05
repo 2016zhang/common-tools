@@ -1,5 +1,7 @@
 package com.baijob.commonTools.wordSraech;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -21,8 +23,12 @@ public class WordSearchTest {
 		//给定文本是否包含敏感词
 		Assert.assertTrue(words.contains(content));
 		//返回第一个找到的敏感词
-		System.out.println(words.getFindedFirstWord(content)); //敏感词2
+		String firstWord = words.getFindedFirstWord(content);
 		//返回找到的所有敏感词
-		System.out.println(words.getFindedAllWords(content));	    //[敏感词2, 敏感词2, 敏感词4]
+		List<String> allWords = words.getFindedAllWords(content);
+		
+		Assert.assertEquals(firstWord, "敏感词2");
+		Assert.assertEquals(firstWord, "敏感词2");
+		Assert.assertArrayEquals(new String[]{"敏感词2", "敏感词2", "敏感词4"}, allWords.toArray());
 	}
 }

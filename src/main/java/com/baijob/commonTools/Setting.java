@@ -23,7 +23,7 @@ import com.baijob.commonTools.Exceptions.SettingException;
 import com.baijob.commonTools.net.URLUtil;
 
 /**
- * 设置工具类。 用于支持设置文件
+ * 设置工具类。 用于支持设置文件 1、支持变量，默认变量命名为
  * 
  * @author Luxiaolei
  * 
@@ -39,6 +39,8 @@ public class Setting extends HashMap<String, String> {
 	private final static String COMMENT_FLAG_PRE = "#";
 	/** 赋值分隔符（用于分隔键值对） */
 	private final static String ASSIGN_FLAG = "=";
+	/** 分组行识别的环绕标记 */
+	private final static char[] GROUP_SURROUND = { '[', ']' };
 	/** 变量名称的正则 */
 	private String reg_var = "\\$\\{(.*?)\\}";
 
@@ -48,6 +50,8 @@ public class Setting extends HashMap<String, String> {
 	private boolean isUseVariable;
 	/** 设定文件的URL */
 	private URL settingUrl;
+	/** 分组的缓存 */
+	private String group_cache;
 
 	/**
 	 * 基本构造<br/>
@@ -101,9 +105,10 @@ public class Setting extends HashMap<String, String> {
 		URL url = URLUtil.getURL(path, clazz);
 		this.init(url, charset, isUseVariable);
 	}
-	
+
 	/**
 	 * 构造
+	 * 
 	 * @param url 设定文件的URL
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
@@ -115,23 +120,24 @@ public class Setting extends HashMap<String, String> {
 	/*--------------------------公有方法 start-------------------------------*/
 	/**
 	 * 初始化设定文件
+	 * 
 	 * @param settingUrl 设定文件的URL
 	 * @param charset 字符集
 	 * @param isUseVariable 是否使用变量
 	 * @return 成功初始化与否
 	 */
-	public boolean init(URL settingUrl, String charset, boolean isUseVariable){
-		if(settingUrl == null || LangUtil.isEmpty(charset)) {
+	public boolean init(URL settingUrl, String charset, boolean isUseVariable) {
+		if (settingUrl == null || LangUtil.isEmpty(charset)) {
 			logger.error("给定参数无效！");
 			return false;
 		}
 		this.charset = Charset.forName(charset);
 		this.isUseVariable = isUseVariable;
-		this.settingUrl= settingUrl;
-		
+		this.settingUrl = settingUrl;
+
 		return this.load(settingUrl);
 	}
-	
+
 	/**
 	 * 加载设置文件
 	 * 
@@ -174,18 +180,24 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public boolean load(InputStream settingStream, boolean isUseVariable) throws IOException {
 		this.clear();
-		BufferedReader reader = null;
-		reader = new BufferedReader(new InputStreamReader(settingStream, charset));
-		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(settingStream, charset));
+
 		while (true) {
 			String line = reader.readLine();
 			if (line == null) {
 				break;
 			}
+			line = line.trim();
 			// 跳过注释行和空行
-			if (LangUtil.isEmpty(line) || line.trim().startsWith(COMMENT_FLAG_PRE)) {
+			if (LangUtil.isEmpty(line) || line.startsWith(COMMENT_FLAG_PRE)) {
 				continue;
 			}
+
+			// 记录分组名
+			if (line.charAt(0) == GROUP_SURROUND[0] && line.charAt(line.length() - 1) == GROUP_SURROUND[1]) {
+				this.group_cache = line.substring(1, line.length() - 1).trim();
+			}
+
 			String[] keyValue = line.split(ASSIGN_FLAG, 2);
 			// 跳过不符合简直规范的行
 			if (keyValue.length < 2) {
@@ -193,6 +205,9 @@ public class Setting extends HashMap<String, String> {
 			}
 
 			String key = keyValue[0].trim();
+			if (!LangUtil.isEmpty(this.group_cache)) {
+				key = this.group_cache + "." + key;
+			}
 			String value = keyValue[1].trim();
 
 			// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
@@ -211,6 +226,7 @@ public class Setting extends HashMap<String, String> {
 			put(key, value);
 		}
 		FileUtil.close(reader);
+		this.group_cache = null;
 		return true;
 	}
 
@@ -223,14 +239,34 @@ public class Setting extends HashMap<String, String> {
 	public void setVarRegex(String regex) {
 		this.reg_var = regex;
 	}
-	
-	@Override
-	public String get(Object key) {
+
+	/**
+	 * 带有日志提示的get，如果没有定义指定的KEY，则打印debug日志
+	 * 
+	 * @param key 键
+	 * @return 值
+	 */
+	public String getWithLog(String key) {
 		String value = super.get(key);
-		if(value == null) {
+		if (value == null) {
 			logger.debug("No key define for [{}]!", key);
 		}
 		return value;
+	}
+
+	/**
+	 * 获得指定分组的键对应值
+	 * 
+	 * @param key 键
+	 * @param group 分组
+	 * @return 值
+	 */
+	public String get(String key, String group) {
+		String keyWithGroup = key;
+		if (!LangUtil.isEmpty(group)) {
+			keyWithGroup = group + "." + keyWithGroup;
+		}
+		return get(keyWithGroup);
 	}
 
 	/**
@@ -240,7 +276,18 @@ public class Setting extends HashMap<String, String> {
 	 * @return 属性值
 	 */
 	public String getString(String key) {
-		return get(key);
+		return getString(key, null);
+	}
+
+	/**
+	 * 获取字符型型属性值
+	 * 
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @return 属性值
+	 */
+	public String getString(String key, String group) {
+		return get(key, group);
 	}
 
 	/**
@@ -249,8 +296,19 @@ public class Setting extends HashMap<String, String> {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public int getInt(String key) throws NumberFormatException{
-		return Integer.parseInt(get(key));
+	public int getInt(String key) throws NumberFormatException {
+		return getInt(key, null);
+	}
+
+	/**
+	 * 获取数字型型属性值
+	 * 
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @return 属性值
+	 */
+	public int getInt(String key, String group) throws NumberFormatException {
+		return Integer.parseInt(get(key, group));
 	}
 
 	/**
@@ -259,8 +317,19 @@ public class Setting extends HashMap<String, String> {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public boolean getBool(String key) throws NumberFormatException{
-		return Boolean.parseBoolean(get(key));
+	public boolean getBool(String key) throws NumberFormatException {
+		return getBool(key, null);
+	}
+
+	/**
+	 * 获取波尔型属性值
+	 * 
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @return 属性值
+	 */
+	public boolean getBool(String key, String group) throws NumberFormatException {
+		return Boolean.parseBoolean(get(key, group));
 	}
 
 	/**
@@ -269,28 +338,61 @@ public class Setting extends HashMap<String, String> {
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public long getLong(String key) throws NumberFormatException{
-		return Long.parseLong(get(key));
+	public long getLong(String key) throws NumberFormatException {
+		return getLong(key, null);
 	}
-	
+
+	/**
+	 * 获取long类型属性值
+	 * 
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @return 属性值
+	 */
+	public long getLong(String key, String group) throws NumberFormatException {
+		return Long.parseLong(get(key, group));
+	}
+
 	/**
 	 * 获取char类型属性值
 	 * 
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public char getChar(String key) throws NumberFormatException{
-		return get(key).charAt(0);
+	public char getChar(String key) {
+		return getChar(key, null);
 	}
-	
+
+	/**
+	 * 获取char类型属性值
+	 * 
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @return 属性值
+	 */
+	public char getChar(String key, String group) {
+		return get(key, group).charAt(0);
+	}
+
 	/**
 	 * 获取double类型属性值
 	 * 
 	 * @param key 属性名
 	 * @return 属性值
 	 */
-	public double getDouble(String key) {
-		return Double.parseDouble(get(key));
+	public double getDouble(String key) throws NumberFormatException {
+		return getDouble(key, null);
+	}
+
+	/**
+	 * 获取double类型属性值
+	 * 
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @return 属性值
+	 */
+	public double getDouble(String key, String group) throws NumberFormatException {
+		return Double.parseDouble(get(key, group));
 	}
 
 	/**
@@ -304,8 +406,8 @@ public class Setting extends HashMap<String, String> {
 	}
 
 	/**
-	 * 持久化当前设置，会覆盖掉之前的设置
-	 * 
+	 * 持久化当前设置，会覆盖掉之前的设置<br>
+	 * 持久化会不会保留之前的分组
 	 * @param absolutePath 设置文件的绝对路径
 	 */
 	public void store(String absolutePath) {
@@ -334,32 +436,43 @@ public class Setting extends HashMap<String, String> {
 	public void store(String path, Class<?> clazz) {
 		this.store(FileUtil.getAbsolutePath(path, clazz));
 	}
-	
+
 	/**
 	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
 	 * 只支持基本类型的转换
 	 * 
 	 * @param object 被调用的对象
-	 * @throws SettingException 
+	 * @throws SettingException
 	 */
-	public void settingToObject(Object object) throws SettingException {
-		try{
+	public void settingToObject(String group, Object object) throws SettingException {
+		try {
 			Method[] methods = object.getClass().getMethods();
 			for (Method method : methods) {
 				String methodName = method.getName();
-				if(methodName.startsWith("set")) {
+				if (methodName.startsWith("set")) {
 					String field = LangUtil.getGeneralField(methodName);
-					String value = get(field);
-					if(value != null) {
+					Object value = get(field, group);
+					if (value != null) {
 						Object castedValue = LangUtil.cast(method.getParameterTypes()[0], value);
 						method.invoke(object, castedValue);
 						logger.debug("Set {}=>{}", field, value);
 					}
 				}
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			throw new SettingException("转换设置至对象出现异常", e);
 		}
+	}
+
+	/**
+	 * 将setting中的键值关系映射到对象中，原理是调用对象对应的set方法<br/>
+	 * 只支持基本类型的转换
+	 * 
+	 * @param object
+	 * @throws SettingException
+	 */
+	public void settingToObject(Object object) throws SettingException {
+		settingToObject(null, object);
 	}
 	/*--------------------------公有方法 end-------------------------------*/
 }
