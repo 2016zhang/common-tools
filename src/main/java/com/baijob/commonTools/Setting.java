@@ -74,6 +74,9 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public Setting(String pathBaseClassLoader, String charset, boolean isUseVariable) {
 		URL url = URLUtil.getURL(pathBaseClassLoader);
+		if(url == null) {
+			throw new RuntimeException("Can not find Setting file: ["+pathBaseClassLoader+"]");
+		}
 		this.init(url, charset, isUseVariable);
 	}
 
@@ -86,10 +89,12 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public Setting(File configFile, String charset, boolean isUseVariable) {
 		if (configFile == null) {
-			logger.error("请指定配置文件！");
-			return;
+			throw new RuntimeException("Null Setting file!");
 		}
 		URL url = URLUtil.getURL(configFile);
+		if(url == null) {
+			throw new RuntimeException("Can not find Setting file: ["+configFile.getAbsolutePath()+"]");
+		}
 		this.init(url, charset, isUseVariable);
 	}
 
@@ -103,6 +108,9 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public Setting(String path, Class<?> clazz, String charset, boolean isUseVariable) {
 		URL url = URLUtil.getURL(path, clazz);
+		if(url == null) {
+			throw new RuntimeException("Can not find Setting file: ["+path+"]");
+		}
 		this.init(url, charset, isUseVariable);
 	}
 
@@ -114,6 +122,9 @@ public class Setting extends HashMap<String, String> {
 	 * @param isUseVariable 是否使用变量
 	 */
 	public Setting(URL url, String charset, boolean isUseVariable) {
+		if(url == null) {
+			throw new RuntimeException("Null url define!");
+		}
 		this.init(url, charset, isUseVariable);
 	}
 
@@ -127,11 +138,15 @@ public class Setting extends HashMap<String, String> {
 	 * @return 成功初始化与否
 	 */
 	public boolean init(URL settingUrl, String charset, boolean isUseVariable) {
-		if (settingUrl == null || LangUtil.isEmpty(charset)) {
-			logger.error("给定参数无效！");
-			return false;
+		if (settingUrl == null) {
+			throw new RuntimeException("Null setting url or charset define!");
 		}
-		this.charset = Charset.forName(charset);
+		try {
+			this.charset = Charset.forName(charset);
+		} catch (Exception e) {
+			logger.warn("User custom charset [{}] parse error, use default charset: [{}]", charset, DEFAULT_CHARSET);
+			this.charset = Charset.forName(DEFAULT_CHARSET);
+		}
 		this.isUseVariable = isUseVariable;
 		this.settingUrl = settingUrl;
 
@@ -146,8 +161,7 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public boolean load(URL settingUrl) {
 		if (settingUrl == null) {
-			logger.error("Define setting url is null, please chech it !");
-			return false;
+			throw new RuntimeException("Null setting url define!");
 		}
 		logger.debug("Load setting file=>" + settingUrl.getPath());
 		InputStream settingStream = null;

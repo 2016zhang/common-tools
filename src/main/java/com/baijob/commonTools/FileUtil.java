@@ -220,6 +220,28 @@ public class FileUtil {
 	}
 	
 	/**
+	 * 将多个字符串写入文件
+	 * @param path 文件路径，绝对
+	 * @param charset 字符集
+	 * @param isAppend 是否追加
+	 * @param lines 要写入的多行文本，文本中不必包含换行符，此方法自动换行
+	 * @throws IOException
+	 */
+	public static void writeStringToFile(String path, String charset, boolean isAppend, String... lines) throws IOException {
+		PrintWriter writer = null;
+		try {
+			writer = getPrintWriter(path, charset, isAppend);
+			for (String line : lines) {
+				writer.println(line);
+			}
+		} catch (IOException e) {
+			throw e;
+		}finally {
+			close(writer);
+		}
+	}
+	
+	/**
 	 * Reader处理接口
 	 * @author Luxiaolei
 	 *

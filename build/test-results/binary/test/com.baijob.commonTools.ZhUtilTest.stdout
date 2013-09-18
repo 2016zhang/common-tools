@@ -1,0 +1,3 @@
+17:12:45.011 [Test worker] DEBUG com.baijob.commonTools.Setting - Load setting file=>/E:/workspace/commonTools/build/resources/main/data/simplified2traditional.setting
+17:12:45.053 [Test worker] DEBUG com.baijob.commonTools.Setting - Load setting file=>/E:/workspace/commonTools/build/resources/main/data/simplified2traditional.setting
+17:12:45.092 [Test worker] DEBUG com.baijob.commonTools.Setting - Load setting file=>/E:/workspace/commonTools/build/resources/main/data/traditional2simplified.setting

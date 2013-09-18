@@ -1,0 +1,7 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<testsuite name="com.baijob.commonTools.wordSraech.WordSearchTest" tests="1" failures="0" errors="0" timestamp="2013-08-09T09:12:45" hostname="xiaoleilu" time="0.0080">
+  <properties/>
+  <testcase name="wordSearchTest" classname="com.baijob.commonTools.wordSraech.WordSearchTest" time="0.0080"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -2,10 +2,20 @@ package com.baijob.commonTools;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * 语言祥光工具类
+ * @author xiaoleilu
+ *
+ */
 public class LangUtil {
+	private static Logger log = LoggerFactory.getLogger(LangUtil.class);
 	
 	/**
 	 * 字符串是否为空 空的定义如下： <br/>
@@ -51,21 +61,74 @@ public class LangUtil {
 		try {
 			return clazz.cast(value);
 		} catch (ClassCastException e) {
-			String value_string = String.valueOf(value);
-			switch (BASIC_TYPE.valueOf(clazz.getName().toUpperCase())) {
+			String valueStr = String.valueOf(value);
+			
+			//判断标准日期
+			if(clazz.isAssignableFrom(Date.class)) {
+				try {
+					return DateUtil.parseDateTime(valueStr);
+				}catch(Exception parseE) {
+					log.warn("Not standard format date: [{}]", valueStr);
+					return valueStr;
+				}
+			}
+			
+			//基本类型
+			switch (BASIC_TYPE.valueOf(clazz.getSimpleName().toUpperCase())) {
+				case BYTE:
+					return Byte.parseByte(valueStr);
+				case SHORT:
+					return Short.parseShort(valueStr);
 				case INT:
-					return Integer.parseInt(value_string);
+					return Integer.parseInt(valueStr);
 				case LONG:
-					return Long.parseLong(value_string);
+					return Long.parseLong(valueStr);
 				case DOUBLE:
-					return Double.parseDouble(value_string);
+					return Double.parseDouble(valueStr);
 				case FLOAT:
-					return Float.parseFloat(value_string);
+					return Float.parseFloat(valueStr);
 				case BOOLEAN:
-					return Boolean.parseBoolean(value_string);
+					return Boolean.parseBoolean(valueStr);
+				case CHAR:
+					return valueStr.charAt(0);
 				default:
 					return value;
 			}
+		}
+	}
+	
+	/**
+	 * 转换基本类型
+	 * @param clazz
+	 * @return
+	 */
+	public static Class<?> castToPrimitive(Class<?> clazz) {
+		BASIC_TYPE basicType;
+		try {
+			basicType = BASIC_TYPE.valueOf(clazz.getSimpleName().toUpperCase());
+		}catch(Exception e) {
+			return clazz;
+		}
+		//基本类型
+		switch (basicType) {
+			case BYTE:
+				return byte.class;
+			case SHORT:
+				return short.class;
+			case INT:
+				return int.class;
+			case LONG:
+				return long.class;
+			case DOUBLE:
+				return double.class;
+			case FLOAT:
+				return float.class;
+			case BOOLEAN:
+				return boolean.class;
+			case CHAR:
+				return char.class;
+			default:
+				return clazz;
 		}
 	}
 	
@@ -219,6 +282,19 @@ public class LangUtil {
 			return str;
 		}
 	}
+	
+	/**
+	 * 比较两个字符串是否相同，如果为null或者空串则算不同
+	 * @param str1 字符串1
+	 * @param str2 字符串2
+	 * @return 是否非空相同
+	 */
+	public static boolean equalsNotEmpty(String str1, String str2) {
+		if(isEmpty(str1)) {
+			return false;
+		}
+		return str1.equals(str2);
+	}
 
 	/**
 	 * 基本变量类型的枚举
@@ -226,7 +302,7 @@ public class LangUtil {
 	 *
 	 */
 	private static enum BASIC_TYPE {
-		INT("int"), LONG("long"), DOUBLE("double"), FLOAT("float"), BOOLEAN("boolean"), CHAR("char");
+		BYTE("byte"), SHORT("short"), INT("int"), LONG("long"), DOUBLE("double"), FLOAT("float"), BOOLEAN("boolean"), CHAR("char");
 		
 		private Object value;
 		private BASIC_TYPE(String value) {

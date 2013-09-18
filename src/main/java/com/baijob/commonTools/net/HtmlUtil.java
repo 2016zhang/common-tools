@@ -30,4 +30,8 @@ public class HtmlUtil {
 			.replace("&#39;", "'")
 			.replace("&nbsp;", " ");
 	}
+	
+	public static String cleanHtmlTag(String content) {
+		return content.replaceAll(RE_HTML_MARK, "");
+	}
 }
