@@ -12,8 +12,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.baijob.commonTools.LangUtil;
 import com.baijob.commonTools.Setting;
+import com.baijob.commonTools.StrUtil;
 import com.baijob.commonTools.Exceptions.ConnException;
 import com.baijob.commonTools.Exceptions.SettingException;
 import com.baijob.commonTools.db.DbUtil;
@@ -91,7 +91,7 @@ public class C3p0Ds {
 		int port = dsSetting.getInt(DsSetting.KEY_DS_PORT);
 		String dbName = dsSetting.getString(DsSetting.KEY_DS_DB);
 		// 验证连接信息的有效性
-		if (LangUtil.isEmpty(remoteHost) || !SocketUtil.isValidPort(port) || LangUtil.isEmpty(dbName)) {
+		if (StrUtil.isBlank(remoteHost) || !SocketUtil.isValidPort(port) || StrUtil.isBlank(dbName)) {
 			throw new ConnException("Invalid connection info=>host:" + remoteHost + ", port:" + port + ", database:" + dbName + "】");
 		}
 

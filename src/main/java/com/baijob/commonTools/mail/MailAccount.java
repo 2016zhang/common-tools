@@ -28,7 +28,7 @@ public class MailAccount {
 
 	public MailAccount(String accountSettingFileBaseClassLoader) {
 		try {
-			new Setting(accountSettingFileBaseClassLoader, "utf8", false).settingToObject(this);
+			new Setting(accountSettingFileBaseClassLoader, "utf8", false).toObject(this);
 		} catch (SettingException e) {
 			logger.error("Init mail account fail!", e);
 		}
@@ -37,7 +37,7 @@ public class MailAccount {
 	
 	public MailAccount(Setting setting) {
 		try {
-			setting.settingToObject(this);
+			setting.toObject(this);
 		} catch (SettingException e) {
 			logger.error("Init mail account fail!", e);
 		}

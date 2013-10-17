@@ -3,8 +3,8 @@ package com.baijob.commonTools.db;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.baijob.commonTools.LangUtil;
 import com.baijob.commonTools.Setting;
+import com.baijob.commonTools.StrUtil;
 import com.baijob.commonTools.Exceptions.ConnException;
 import com.baijob.commonTools.Exceptions.SettingException;
 import com.baijob.commonTools.net.Connector;
@@ -68,12 +68,12 @@ public class DsSetting {
 		this.dbSetting = dbSetting;
 		
 		this.dsName = (dataSourceName == null) ? dbSetting.getString(DATASOURCE_KEY) : dataSourceName;
-		if (LangUtil.isEmpty(this.dsName)) {
+		if (StrUtil.isBlank(this.dsName)) {
 			throw new SettingException("无法找到默认的连接配置项！");
 		}
 		
 		this.ssh = (sshTunnel == null) ? dbSetting.getString(SSHNAME_KEY) : sshTunnel;
-		if (LangUtil.isEmpty(this.ssh)) {
+		if (StrUtil.isBlank(this.ssh)) {
 			logger.debug("Not use SSH tunnel.");
 			this.ssh = SSHUtil.SSH_NONE;
 		}
@@ -217,7 +217,7 @@ public class DsSetting {
 	 */
 	public String getJdbcDriver() {
 		String jdbcDriver = dbSetting.getString(DRIVER_KEY);
-		return LangUtil.isEmpty(jdbcDriver) ? DEFAULT_DRIVER : jdbcDriver;
+		return StrUtil.isBlank(jdbcDriver) ? DEFAULT_DRIVER : jdbcDriver;
 	}
 	
 	/**
@@ -226,7 +226,7 @@ public class DsSetting {
 	 */
 	public String getProtocol() {
 		String protocol = dbSetting.getString(PROTOCOL_KEY);
-		return LangUtil.isEmpty(protocol) ? DEFAULT_PROTOCOL : protocol;
+		return StrUtil.isBlank(protocol) ? DEFAULT_PROTOCOL : protocol;
 	}
 	
 	/**

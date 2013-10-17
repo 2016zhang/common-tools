@@ -3,7 +3,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.baijob.commonTools.LangUtil;
+import com.baijob.commonTools.StrUtil;
 
 /**
  * 过滤词及一些简单处理
@@ -36,7 +36,7 @@ public class StopChar {
 	 * @return 是否是不处理的词
 	 */
 	public static boolean isStopChar(String ch) {
-		if (LangUtil.isEmpty(ch)) return true;
+		if (StrUtil.isBlank(ch)) return true;
 		return STOP_WORD.contains(ch);
 	}
 	

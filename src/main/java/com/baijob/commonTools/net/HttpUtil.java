@@ -1,179 +1,83 @@
 package com.baijob.commonTools.net;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.baijob.commonTools.FileUtil;
-import com.baijob.commonTools.LangUtil;
-import com.baijob.commonTools.RegexUtil;
+import com.baijob.commonTools.IoUtil;
+import com.baijob.commonTools.ReUtil;
+import com.baijob.commonTools.StrUtil;
 
 /**
  * Http请求工具类
- * @author luxiaolei@baijob.com
+ * 
+ * @author xiaoleilu
  */
 public class HttpUtil {
-	private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
-	
-	public final static String HTTP_CHARSET = "GBK";
+	private static Logger log = LoggerFactory.getLogger(HttpUtil.class);
+
 	/** 未知的标识 */
 	public final static String UNKNOW = "unknown";
-	
-	private static Map<String, String> cookies;
-	
-	public HttpUtil() {
-		cookies = new HashMap<String, String>();
-	}
-	
-	/**
-	 * 发送get请求
-	 * @param urlString 网址
-	 * @param customCharset 自定义请求字符集
-	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
-	 * @throws IOException
-	 */
-	public String get(String urlString, String customCharset) throws IOException{
-		URL url = new URL(urlString);
-		HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-		String host = url.getHost();
-		String cookie = cookies.get(host);
-		if(cookie != null) conn.addRequestProperty("Cookie", cookie);
-		
-//		conn.addRequestProperty("User-Agent", "Baiduspider+(+http://www.baidu.com/search/spider.htm)");
-		conn.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.83 Safari/537.1");
-		
-		conn.setRequestMethod("GET");
-		conn.setDoInput(true);
-		
-		String setCookie = conn.getHeaderField("Set-Cookie");
-		if(setCookie != null){
-			logger.debug("Set Cookie: " + setCookie);
-			cookies.put(host, setCookie);
-		}
-		
-		/* 获取内容 */
-		int contentLength = conn.getContentLength();
-		StringBuilder content = new StringBuilder(contentLength > 0 ? contentLength : 16);
-		BufferedReader bufferedReader = null;
-		String charset = getCharsetFromConn(conn);
-		if(charset == null){
-			bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		}else{
-			bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream(), charset));
-		}
-		String line = bufferedReader.readLine();
-		while (line != null) {  
-			content.append(line).append("\n");  
-            line = bufferedReader.readLine();  
-        }
-        FileUtil.close(bufferedReader);
-        conn.disconnect();
-        
-        return content.toString();
-	}
-	
+
 	/**
 	 * 编码字符为 application/x-www-form-urlencoded
-	 * @param content	被编码内容
+	 * 
+	 * @param content 被编码内容
 	 * @return 编码后的字符
 	 */
-	public static String encode(String content, String charset){
-		if(LangUtil.isEmpty(content)) return content;
-		
+	public static String encode(String content, String charset) {
+		if (StrUtil.isBlank(content)) return content;
+
 		String encodeContnt = null;
 		try {
 			encodeContnt = URLEncoder.encode(content, charset);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Unsupported encoding: {}", charset);
+			log.error("Unsupported encoding: {}", charset);
 		}
-		 return encodeContnt;
+		return encodeContnt;
 	}
-	
+
 	/**
 	 * 解码application/x-www-form-urlencoded字符
-	 * @param content	被编码内容
+	 * 
+	 * @param content 被编码内容
 	 * @return 编码后的字符
 	 */
-	public static String decode(String content, String charset){
-		if(LangUtil.isEmpty(content)) return content;
-		
+	public static String decode(String content, String charset) {
+		if (StrUtil.isBlank(content)) return content;
 		String encodeContnt = null;
 		try {
 			encodeContnt = URLDecoder.decode(content, charset);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Unsupported encoding: {}", charset);
+			log.error("Unsupported encoding: {}", charset);
 		}
 		return encodeContnt;
 	}
-	
+
 	/**
 	 * 格式化URL链接
+	 * 
 	 * @param url 需要格式化的URL
 	 * @return 格式化后的URL，如果提供了null或者空串，返回null
 	 */
-	public static String formatUrl(String url){
-		if(LangUtil.isEmpty(url)) return null;
-		if(url.startsWith("http://") || url.startsWith("https://")) return url;
+	public static String formatUrl(String url) {
+		if (StrUtil.isBlank(url)) return null;
+		if (url.startsWith("http://") || url.startsWith("https://")) return url;
 		return "http://" + url;
 	}
-	
-	/**
-	 * 格式化Http Header 的name部分
-	 * @param headerName 头名称
-	 * @return 格式化后的 header name, 如果headerName为空，返回null
-	 */
-	public static String formatHeaderName(String headerName) {
-		if(LangUtil.isEmpty(headerName)) {
-			return null;
-		}else {
-			headerName = headerName.toLowerCase();
-		}
-		
-		if (headerName.equals("etag")) {
-			return "ETag";
-		}
 
-		if (headerName.equals("www-authenticate")) {
-			return "WWW-Authenticate";
-		}
-
-		char[] name = headerName.toCharArray();
-
-		boolean capitalize = true;
-
-		for (int i = 0; i < name.length; i++) {
-			char c = name[i];
-
-			if (c == '-') {
-				capitalize = true;
-				continue;
-			}
-
-			if (capitalize) {
-				name[i] = Character.toUpperCase(c);
-				capitalize = false;
-			} else {
-				name[i] = Character.toLowerCase(c);
-			}
-		}
-
-		return new String(name);
-	}
-	
 	/**
 	 * 获取客户端IP
+	 * 
 	 * @param request 请求对象
 	 * @return IP地址
 	 */
@@ -197,21 +101,64 @@ public class HttpUtil {
 		}
 		return ip;
 	}
+
+	/**
+	 * 发送get请求
+	 * 
+	 * @param urlString 网址
+	 * @param customCharset 自定义请求字符集，如果字符集获取不到，使用此字符集
+	 * @return 返回内容，如果只检查状态码，正常只返回 ""，不正常返回 null
+	 * @throws IOException
+	 */
+	public static String get(String urlString, String customCharset, boolean isPassCodeError) throws IOException {
+		URL url = new URL(urlString);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		conn.setRequestMethod("GET");
+		conn.setDoInput(true);
+		
+		if(conn.getResponseCode() != 200) {
+			if(! isPassCodeError) {
+				throw new IOException("Status code not 200!");
+			}
+		}
+		
+		/* 获取内容 */
+		String charset = getCharsetFromConn(conn);
+		String content = IoUtil.getString(conn.getInputStream(), StrUtil.isBlank(charset) ? customCharset : charset);
+		conn.disconnect();
+
+		return content;
+	}
 	
 	/**
+	 * 获得远程String
+	 * @param url 请求的url
+	 * @param customCharset 自定义的字符集
+	 * @return
+	 * @throws IOException
+	 */
+	public static String downloadString(String url, String customCharset) throws IOException {
+		InputStream inputStream = new URL(url).openStream();
+		return IoUtil.getString(inputStream, customCharset);
+	}
+	
+	//----------------------------------------------------------------------------------------- Private method start
+	/**
 	 * 从Http连接的头信息中获得字符集
+	 * 
 	 * @param conn HTTP连接对象
 	 * @return 字符集
 	 */
-	private static String getCharsetFromConn(HttpURLConnection conn){
+	private static String getCharsetFromConn(HttpURLConnection conn) {
 		String charset = conn.getContentEncoding();
-		if(charset == null || "".equals(charset.trim())){
+		if (charset == null || "".equals(charset.trim())) {
 			String contentType = conn.getContentType();
-			charset = RegexUtil.get("charset=(.*)", contentType, 1);
+			charset = ReUtil.get("charset=(.*)", contentType, 1);
 		}
 		return charset;
 	}
-	
+
 	/**
 	 * 检测给定字符串是否为未知，多用于检测HTTP请求相关<br/>
 	 * 
@@ -219,78 +166,7 @@ public class HttpUtil {
 	 * @return 是否未知
 	 */
 	private static boolean isUnknow(String checkString) {
-		return LangUtil.isEmpty(checkString) || UNKNOW.equalsIgnoreCase(checkString);
+		return StrUtil.isBlank(checkString) || UNKNOW.equalsIgnoreCase(checkString);
 	}
-	
-	/**
-	 * Escape编码（Unicode）
-	 * @param content
-	 * @return
-	 */
-	public static String escape(String content) {
-		if(LangUtil.isEmpty(content)) {
-			return content;
-		}
-		
-		int i;
-		char j;
-		StringBuffer tmp = new StringBuffer();
-		tmp.ensureCapacity(content.length() * 6);
-
-		for (i = 0; i < content.length(); i++) {
-
-			j = content.charAt(i);
-
-			if (Character.isDigit(j) || Character.isLowerCase(j) || Character.isUpperCase(j))
-				tmp.append(j);
-			else if (j < 256) {
-				tmp.append("%");
-				if (j < 16) tmp.append("0");
-				tmp.append(Integer.toString(j, 16));
-			} else {
-				tmp.append("%u");
-				tmp.append(Integer.toString(j, 16));
-			}
-		}
-		return tmp.toString();
-	}
-
-	/**
-	 * Escape解码
-	 * @param content
-	 * @return
-	 */
-	public static String unescape(String content) {
-		if(LangUtil.isEmpty(content)) {
-			return content;
-		}
-		
-		StringBuffer tmp = new StringBuffer();
-		tmp.ensureCapacity(content.length());
-		int lastPos = 0, pos = 0;
-		char ch;
-		while (lastPos < content.length()) {
-			pos = content.indexOf("%", lastPos);
-			if (pos == lastPos) {
-				if (content.charAt(pos + 1) == 'u') {
-					ch = (char) Integer.parseInt(content.substring(pos + 2, pos + 6), 16);
-					tmp.append(ch);
-					lastPos = pos + 6;
-				} else {
-					ch = (char) Integer.parseInt(content.substring(pos + 1, pos + 3), 16);
-					tmp.append(ch);
-					lastPos = pos + 3;
-				}
-			} else {
-				if (pos == -1) {
-					tmp.append(content.substring(lastPos));
-					lastPos = content.length();
-				} else {
-					tmp.append(content.substring(lastPos, pos));
-					lastPos = pos;
-				}
-			}
-		}
-		return tmp.toString();
-	}
+	//----------------------------------------------------------------------------------------- Private method start end
 }

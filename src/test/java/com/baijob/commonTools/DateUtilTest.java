@@ -34,7 +34,7 @@ public class DateUtilTest {
 	 */
 	@Test
 	public void getOffsiteDateTest() {
-		Date offsiteDate = DateUtil.getOffsiteDate(DateUtil.parseDateTime("2013-01-13 11:33:20"), Calendar.DAY_OF_MONTH, 1);
+		Date offsiteDate = DateUtil.offsiteDate(DateUtil.parseDateTime("2013-01-13 11:33:20"), Calendar.DAY_OF_MONTH, 1);
 		Assert.assertEquals("2013-01-14 11:33:20", DateUtil.formatDateTime(offsiteDate));
 	}
 	

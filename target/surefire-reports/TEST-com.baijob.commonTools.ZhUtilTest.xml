@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.113" errors="0" skipped="0" tests="1" name="com.baijob.commonTools.ZhUtilTest">
+<testsuite failures="0" time="0.082" errors="0" skipped="0" tests="1" name="com.baijob.commonTools.ZhUtilTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="D:\java\jdk1.6.0_45\jre\bin"/>
@@ -19,15 +19,15 @@
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="D:\java\jdk1.6.0_45\jre\lib\endorsed"/>
     <property name="os.arch" value="amd64"/>
-    <property name="java.io.tmpdir" value="E:\Temp\User\"/>
+    <property name="java.io.tmpdir" value="D:\cygwin64\tmp\"/>
     <property name="line.separator" value="
 "/>
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 7"/>
-    <property name="classworlds.conf" value="D:\java\apache-maven-3.1.0\bin\..\bin\m2.conf"/>
+    <property name="classworlds.conf" value="D:\java\apache-maven-3.1.0/bin/m2.conf"/>
     <property name="sun.jnu.encoding" value="GBK"/>
-    <property name="java.library.path" value="D:\java\jdk1.6.0_45\bin;C:\windows\Sun\Java\bin;C:\windows\system32;C:\windows;%SystemRoot%\system32\WindowsPowerShell\v1.0\;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;D:\java\jdk1.6.0_45\bin;D:\java\apache-maven-3.1.0\bin;D:\python\Python27;D:\python\Python27\Lib\site-packages\django\bin;d:\Program Files\Bitvise SSH Client;D:\Program Files\TortoiseSVN\bin;d:\java\Groovy\Groovy-2.1.6\bin;."/>
+    <property name="java.library.path" value="D:\java\jdk1.6.0_45\bin;C:\windows\Sun\Java\bin;C:\windows\system32;C:\windows;D:\cygwin64\usr\local\bin;D:\cygwin64\bin;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0;D:\java\jdk1.6.0_45\bin;D:\java\apache-maven-3.1.0\bin;D:\python\Python34;D:\python\Python27;D:\python\Python27\Lib\site-packages\django\bin;D:\Program Files\Bitvise SSH Client;D:\java\Groovy\Groovy-2.1.6\bin;D:\java\gradle-1.6\bin;D:\Program Files\TortoiseSVN\bin;D:\Program Files\Git\bin;C:\Program Files\TortoiseGit\bin;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="50.0"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -38,12 +38,12 @@
     <property name="file.encoding" value="GBK"/>
     <property name="java.specification.version" value="1.6"/>
     <property name="user.name" value="xiaoleilu"/>
-    <property name="java.class.path" value="D:\java\apache-maven-3.1.0\bin\..\boot\plexus-classworlds-2.4.2.jar"/>
+    <property name="java.class.path" value="D:\java\apache-maven-3.1.0/boot/plexus-classworlds-2.4.2.jar"/>
     <property name="org.slf4j.simpleLogger.defaultLogLevel" value="info"/>
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="D:\java\jdk1.6.0_45\jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean deploy"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean package"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.language" value="zh"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -52,7 +52,7 @@
     <property name="java.ext.dirs" value="D:\java\jdk1.6.0_45\jre\lib\ext;C:\windows\Sun\Java\lib\ext"/>
     <property name="sun.boot.class.path" value="D:\java\jdk1.6.0_45\jre\lib\resources.jar;D:\java\jdk1.6.0_45\jre\lib\rt.jar;D:\java\jdk1.6.0_45\jre\lib\sunrsasign.jar;D:\java\jdk1.6.0_45\jre\lib\jsse.jar;D:\java\jdk1.6.0_45\jre\lib\jce.jar;D:\java\jdk1.6.0_45\jre\lib\charsets.jar;D:\java\jdk1.6.0_45\jre\lib\modules\jdk.boot.jar;D:\java\jdk1.6.0_45\jre\classes"/>
     <property name="java.vendor" value="Sun Microsystems Inc."/>
-    <property name="maven.home" value="D:\java\apache-maven-3.1.0\bin\.."/>
+    <property name="maven.home" value="D:\java\apache-maven-3.1.0"/>
     <property name="file.separator" value="\"/>
     <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -60,5 +60,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase time="0.113" classname="com.baijob.commonTools.ZhUtilTest" name="zhUtilTest"/>
+  <testcase time="0.082" classname="com.baijob.commonTools.ZhUtilTest" name="zhUtilTest"/>
 </testsuite>

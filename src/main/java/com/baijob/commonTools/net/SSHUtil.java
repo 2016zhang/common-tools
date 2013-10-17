@@ -7,7 +7,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.baijob.commonTools.LangUtil;
+import com.baijob.commonTools.StrUtil;
 import com.baijob.commonTools.Exceptions.ConnException;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -73,7 +73,7 @@ public class SSHUtil {
 	 * @return SSH会话
 	 */
 	synchronized public static Session openSession(String sshHost, int sshPort, String sshUser, String sshPass){
-		if(LangUtil.isEmpty(sshHost) || sshPort < 0 || LangUtil.isEmpty(sshUser) || LangUtil.isEmpty(sshPass)) return null;
+		if(StrUtil.isBlank(sshHost) || sshPort < 0 || StrUtil.isBlank(sshUser) || StrUtil.isBlank(sshPass)) return null;
 		
 		try {
 			Session session = new JSch().getSession(sshUser, sshHost, sshPort);

@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-import com.baijob.commonTools.RegexUtil;
+import com.baijob.commonTools.ReUtil;
 
 /**
  * 套接字相关工具类
@@ -74,7 +74,7 @@ public class SocketUtil {
 	 * @return long值
 	 */
 	public static long ipv4ToLong(String strIP) {
-		if(RegexUtil.isIpv4(strIP)){
+		if(ReUtil.isIpv4(strIP)){
 			long[] ip = new long[4];
 			// 先找到IP地址字符串中.的位置
 			int position1 = strIP.indexOf(".");

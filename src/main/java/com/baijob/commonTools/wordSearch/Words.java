@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.baijob.commonTools.LangUtil;
+import com.baijob.commonTools.StrUtil;
 
 /**
  * 单词树
@@ -51,7 +51,7 @@ public class Words extends HashMap<Character, Words>{
 	 */
 	public void addWord(String word, int type){
 		//已经是单词的末尾
-		if(LangUtil.isEmpty(word)){
+		if(StrUtil.isBlank(word)){
 			this.types.put(type, true);
 			this.clear();
 			return;
@@ -97,7 +97,7 @@ public class Words extends HashMap<Character, Words>{
 	 * @return 是否包含
 	 */
 	public boolean contains(String text, int type){
-		while(! LangUtil.isEmpty(text)){
+		while(! StrUtil.isBlank(text)){
 			Words words = this;
 			char[] array = text.toCharArray();
 			for (char c : array) {
@@ -133,7 +133,7 @@ public class Words extends HashMap<Character, Words>{
 	 * @return 匹配到的关键字
 	 */
 	public String getFindedFirstWord(String text, int type){
-		while(! LangUtil.isEmpty(text)){
+		while(! StrUtil.isBlank(text)){
 			StringBuilder sb = new StringBuilder();
 			Words words = this;
 			char[] array = text.toCharArray();
@@ -173,7 +173,7 @@ public class Words extends HashMap<Character, Words>{
 	 */
 	public List<String> getFindedAllWords(String text, int type) {
 		List<String> findedWords = new ArrayList<String>();
-		while(! LangUtil.isEmpty(text)){
+		while(! StrUtil.isBlank(text)){
 			StringBuilder sb = new StringBuilder();
 			Words words = this;
 			char[] array = text.toCharArray();

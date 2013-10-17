@@ -1,6 +1,6 @@
 package com.baijob.commonTools.net;
 
-import com.baijob.commonTools.LangUtil;
+import com.baijob.commonTools.StrUtil;
 
 /**
  * HTML工具类
@@ -18,7 +18,7 @@ public class HtmlUtil {
 	 * @return 转换后的字符串
 	 */
 	public static String restoreEscaped(String htmlStr) {
-		if (LangUtil.isEmpty(htmlStr)) {
+		if (StrUtil.isBlank(htmlStr)) {
 			return htmlStr;
 		}
 		return htmlStr

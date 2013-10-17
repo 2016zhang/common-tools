@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.baijob.commonTools.FileUtil;
-import com.baijob.commonTools.LangUtil;
 import com.baijob.commonTools.Setting;
+import com.baijob.commonTools.StrUtil;
 import com.baijob.commonTools.Exceptions.ConnException;
 import com.baijob.commonTools.Exceptions.SettingException;
 import com.baijob.commonTools.db.DbUtil;
@@ -105,7 +105,7 @@ public class DruidDs {
 		int port = dsSetting.getInt(DsSetting.KEY_DS_PORT);
 		String dbName = dsSetting.getString(DsSetting.KEY_DS_DB);
 		// 验证连接信息的有效性
-		if (LangUtil.isEmpty(remoteHost) || !SocketUtil.isValidPort(port) || LangUtil.isEmpty(dbName)) {
+		if (StrUtil.isBlank(remoteHost) || !SocketUtil.isValidPort(port) || StrUtil.isBlank(dbName)) {
 			throw new ConnException("Invalid connection info=>host:" + remoteHost + ", port:" + port + ", database:" + dbName + "】");
 		}
 
@@ -113,7 +113,7 @@ public class DruidDs {
 		if(druidSetting != null) {
 			try {
 				// 连接池参数注入
-				druidSetting.settingToObject(dds);
+				druidSetting.toObject(dds);
 			} catch (SettingException e) {
 				throw new ConnException("Read Druid setting error!", e);
 			}

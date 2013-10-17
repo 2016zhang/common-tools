@@ -23,17 +23,23 @@ import com.baijob.commonTools.Exceptions.SettingException;
 import com.baijob.commonTools.net.URLUtil;
 
 /**
- * 设置工具类。 用于支持设置文件 1、支持变量，默认变量命名为
- * 
- * @author Luxiaolei
+ * 设置工具类。 用于支持设置文件<br>
+ *  1、支持变量，默认变量命名为 ${变量名}，变量只能识别读入行的变量，例如第6行的变量在第三行无法读取
+ *  2、支持分组，分组为中括号括起来的内容，中括号以下的行都为此分组的内容，无分组相当于空字符分组<br>
+ *  		若某个key是name，加上分组后的键相当于group.name
+ *  3、注释以#开头，但是空行和不带“=”的行也会被跳过，但是建议加#
+ *  4、store方法不会保存注释内容，慎重使用
+ * @author xiaoleilu
  * 
  */
 public class Setting extends HashMap<String, String> {
 	private static final long serialVersionUID = -477527787843971824L;
-	private static Logger logger = LoggerFactory.getLogger(Setting.class);
+	private static Logger log = LoggerFactory.getLogger(Setting.class);
 
 	/** 默认字符集 */
 	public final static String DEFAULT_CHARSET = "utf8";
+	/** 数组类型值默认分隔符 */
+	public final static String DEFAULT_DELIMITER= ",";
 
 	/** 注释符号（当有此符号在行首，表示此行为注释） */
 	private final static String COMMENT_FLAG_PRE = "#";
@@ -144,7 +150,7 @@ public class Setting extends HashMap<String, String> {
 		try {
 			this.charset = Charset.forName(charset);
 		} catch (Exception e) {
-			logger.warn("User custom charset [{}] parse error, use default charset: [{}]", charset, DEFAULT_CHARSET);
+			log.warn("User custom charset [{}] parse error, use default charset: [{}]", charset, DEFAULT_CHARSET);
 			this.charset = Charset.forName(DEFAULT_CHARSET);
 		}
 		this.isUseVariable = isUseVariable;
@@ -163,13 +169,13 @@ public class Setting extends HashMap<String, String> {
 		if (settingUrl == null) {
 			throw new RuntimeException("Null setting url define!");
 		}
-		logger.debug("Load setting file=>" + settingUrl.getPath());
+		log.debug("Load setting file [{}]", settingUrl.getPath());
 		InputStream settingStream = null;
 		try {
 			settingStream = settingUrl.openStream();
 			load(settingStream, isUseVariable);
 		} catch (IOException e) {
-			logger.error("Load setting error!", e);
+			log.error("Load setting error!", e);
 			return false;
 		} finally {
 			FileUtil.close(settingStream);
@@ -203,7 +209,7 @@ public class Setting extends HashMap<String, String> {
 			}
 			line = line.trim();
 			// 跳过注释行和空行
-			if (LangUtil.isEmpty(line) || line.startsWith(COMMENT_FLAG_PRE)) {
+			if (StrUtil.isBlank(line) || line.startsWith(COMMENT_FLAG_PRE)) {
 				continue;
 			}
 
@@ -219,7 +225,7 @@ public class Setting extends HashMap<String, String> {
 			}
 
 			String key = keyValue[0].trim();
-			if (!LangUtil.isEmpty(this.group_cache)) {
+			if (!StrUtil.isBlank(this.group_cache)) {
 				key = this.group_cache + "." + key;
 			}
 			String value = keyValue[1].trim();
@@ -227,10 +233,10 @@ public class Setting extends HashMap<String, String> {
 			// 替换值中的所有变量变量（变量必须是此行之前定义的变量，否则无法找到）
 			if (isUseVariable) {
 				// 找到所有变量标识
-				Set<String> vars = RegexUtil.findAll(reg_var, value, 0, new HashSet<String>());
+				Set<String> vars = ReUtil.findAll(reg_var, value, 0, new HashSet<String>());
 				for (String var : vars) {
 					// 查找变量名对应的值
-					String varValue = this.get(RegexUtil.get(reg_var, var, 1));
+					String varValue = this.get(ReUtil.get(reg_var, var, 1));
 					if (varValue != null) {
 						// 替换标识
 						value = value.replace(var, varValue);
@@ -254,6 +260,7 @@ public class Setting extends HashMap<String, String> {
 		this.reg_var = regex;
 	}
 
+	//--------------------------------------------------------------- Get
 	/**
 	 * 带有日志提示的get，如果没有定义指定的KEY，则打印debug日志
 	 * 
@@ -263,7 +270,7 @@ public class Setting extends HashMap<String, String> {
 	public String getWithLog(String key) {
 		String value = super.get(key);
 		if (value == null) {
-			logger.debug("No key define for [{}]!", key);
+			log.debug("No key define for [{}]!", key);
 		}
 		return value;
 	}
@@ -277,12 +284,13 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public String get(String key, String group) {
 		String keyWithGroup = key;
-		if (!LangUtil.isEmpty(group)) {
+		if (!StrUtil.isBlank(group)) {
 			keyWithGroup = group + "." + keyWithGroup;
 		}
 		return get(keyWithGroup);
 	}
 
+	//--------------------------------------------------------------- Get String
 	/**
 	 * 获取字符型型属性值
 	 * 
@@ -291,6 +299,18 @@ public class Setting extends HashMap<String, String> {
 	 */
 	public String getString(String key) {
 		return getString(key, null);
+	}
+	
+	/**
+	 * 获取字符型型属性值<br>
+	 * 若获得的值为不可见字符，使用默认值
+	 * 
+	 * @param key 属性名
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 */
+	public String getStringWithDefault(String key, String defaultValue) {
+		return getStringWithDefault(key, null, defaultValue);
 	}
 
 	/**
@@ -303,7 +323,60 @@ public class Setting extends HashMap<String, String> {
 	public String getString(String key, String group) {
 		return get(key, group);
 	}
+	
+	/**
+	 * 获取字符型型属性值<br>
+	 * 若获得的值为不可见字符，使用默认值
+	 * 
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @param defaultValue 默认值
+	 * @return 属性值
+	 */
+	public String getStringWithDefault(String key, String group, String defaultValue) {
+		String value = getString(key, group);
+		if(StrUtil.isBlank(value)) {
+			return defaultValue;
+		}
+		return value;
+	}
 
+	//--------------------------------------------------------------- Get string array
+	/**
+	 * 获得数组型
+	 * @param key 属性名
+	 * @return 属性值
+	 */
+	public String[] getStrings(String key) {
+		return getStrings(key, null);
+	}
+	
+	/**
+	 * 获得数组型
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @return 属性值
+	 */
+	public String[] getStrings(String key, String group) {
+		return getStrings(key, group, DEFAULT_DELIMITER);
+	}
+	
+	/**
+	 * 获得数组型
+	 * @param key 属性名
+	 * @param group 分组名
+	 * @param delimiter 分隔符
+	 * @return 属性值
+	 */
+	public String[] getStrings(String key, String group, String delimiter) {
+		String value = getString(key, group);
+		if(StrUtil.isBlank(value)) {
+			return null;
+		}
+		return StrUtil.split(value, delimiter);
+	}
+	
+	//--------------------------------------------------------------- Get int
 	/**
 	 * 获取数字型型属性值
 	 * 
@@ -325,6 +398,7 @@ public class Setting extends HashMap<String, String> {
 		return Integer.parseInt(get(key, group));
 	}
 
+	//--------------------------------------------------------------- Get bool
 	/**
 	 * 获取波尔型属性值
 	 * 
@@ -346,6 +420,7 @@ public class Setting extends HashMap<String, String> {
 		return Boolean.parseBoolean(get(key, group));
 	}
 
+	//--------------------------------------------------------------- Get long
 	/**
 	 * 获取long类型属性值
 	 * 
@@ -367,6 +442,7 @@ public class Setting extends HashMap<String, String> {
 		return Long.parseLong(get(key, group));
 	}
 
+	//--------------------------------------------------------------- Get char
 	/**
 	 * 获取char类型属性值
 	 * 
@@ -388,6 +464,7 @@ public class Setting extends HashMap<String, String> {
 		return get(key, group).charAt(0);
 	}
 
+	//--------------------------------------------------------------- Get double
 	/**
 	 * 获取double类型属性值
 	 * 
@@ -437,7 +514,7 @@ public class Setting extends HashMap<String, String> {
 		} catch (FileNotFoundException e) {
 			// 不会出现这个异常
 		} catch (IOException e) {
-			logger.error("存储设置时出现异常。", e);
+			log.error("Store Setting error!", e);
 		}
 	}
 
@@ -458,23 +535,27 @@ public class Setting extends HashMap<String, String> {
 	 * @param object 被调用的对象
 	 * @throws SettingException
 	 */
-	public void settingToObject(String group, Object object) throws SettingException {
+	public void toObject(String group, Object object) throws SettingException {
 		try {
 			Method[] methods = object.getClass().getMethods();
 			for (Method method : methods) {
 				String methodName = method.getName();
 				if (methodName.startsWith("set")) {
-					String field = LangUtil.getGeneralField(methodName);
+					String field = StrUtil.getGeneralField(methodName);
 					Object value = get(field, group);
 					if (value != null) {
-						Object castedValue = LangUtil.cast(method.getParameterTypes()[0], value);
+						Class<?>[] parameterTypes = method.getParameterTypes();
+						if(parameterTypes.length != 1) {
+							continue;
+						}
+						Object castedValue = ClassUtil.parse(parameterTypes[0], value);
 						method.invoke(object, castedValue);
-						logger.debug("Set {}=>{}", field, value);
+						log.debug("Parse setting to object field [{}={}]", field, value);
 					}
 				}
 			}
 		} catch (Exception e) {
-			throw new SettingException("转换设置至对象出现异常", e);
+			throw new SettingException("Parse setting to object error!", e);
 		}
 	}
 
@@ -485,8 +566,8 @@ public class Setting extends HashMap<String, String> {
 	 * @param object
 	 * @throws SettingException
 	 */
-	public void settingToObject(Object object) throws SettingException {
-		settingToObject(null, object);
+	public void toObject(Object object) throws SettingException {
+		toObject(null, object);
 	}
 	/*--------------------------公有方法 end-------------------------------*/
 }
